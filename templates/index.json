@@ -11,24 +11,15 @@
   "sections": {
     "testing_basics_1_GpJ98w": {
       "type": "testing-basics-1",
+      "disabled": true,
       "name": "Pango TEST 1",
       "settings": {}
     },
     "email_base_cBBTxc": {
       "type": "EMAIL-base",
+      "disabled": true,
       "name": "NEWSLETTER EMAIL BASE",
       "settings": {}
-    },
-    "typewriter_effect_ANgX4Y": {
-      "type": "typewriter-effect",
-      "name": "Typewriter Effect",
-      "settings": {
-        "paragraph": "<p>We transform sensations into passions, encapsulating the purest and deepest essence of our roots in perfumes.</p>",
-        "button_text": "DISCOVER THE COLLECTION",
-        "button_link": "",
-        "padding_top-bottom_mobile": 120,
-        "padding_top-bottom_desktop": 114
-      }
     },
     "hero_dB9Aye": {
       "type": "hero",
@@ -207,6 +198,7 @@
       "block_order": [
         "group_fC9gq6"
       ],
+      "disabled": true,
       "name": "t:names.hero_bottom_aligned",
       "settings": {
         "media_type_1": "image",
@@ -234,12 +226,30 @@
         "padding-block-start": 40,
         "padding-block-end": 40
       }
+    },
+    "typewriter_effect_ANgX4Y": {
+      "type": "typewriter-effect",
+      "disabled": true,
+      "name": "Typewriter Effect",
+      "settings": {
+        "paragraph": "<p>We transform sensations into passions, encapsulating the purest and deepest essence of our roots in perfumes.</p>",
+        "button_text": "DISCOVER THE COLLECTION",
+        "button_link": "",
+        "padding_top-bottom_mobile": 120,
+        "padding_top-bottom_desktop": 114
+      }
+    },
+    "calendar_nicolina_jci9jA": {
+      "type": "calendar-nicolina",
+      "name": "Calendar Nicolina",
+      "settings": {}
     }
   },
   "order": [
     "testing_basics_1_GpJ98w",
     "email_base_cBBTxc",
     "hero_dB9Aye",
-    "typewriter_effect_ANgX4Y"
+    "typewriter_effect_ANgX4Y",
+    "calendar_nicolina_jci9jA"
   ]
 }
