@@ -161,8 +161,9 @@ const vanillacalendar = {
   date: new Date(),
   todaysDate: new Date(),
 
-  // SETTINGS
-  horaCorte: true, 
+  // --- LOGIC SETTINGS ---
+  horaCorte: true,   // 
+  fueraM50: false,   // 
 
   init: function () {
     this.date.setDate(1);
@@ -187,7 +188,6 @@ const vanillacalendar = {
     this.monthArea.innerHTML = '';
     const month = this.date.getMonth();
     const year = this.date.getFullYear();
-    
     const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(this.date);
     this.label.innerHTML = `${monthName} ${year}`;
 
@@ -207,58 +207,83 @@ const vanillacalendar = {
     }
   },
 
-createDay: function (num, actualDate) {
-  const dayEl = document.createElement('div');
-  const errorEl = document.getElementById('cal-error');
-  dayEl.className = 'cal__date';
-  dayEl.innerHTML = `<span>${num}</span>`;
-  
-  const checkDate = new Date(actualDate).setHours(0,0,0,0);
-  const today = new Date(this.todaysDate).setHours(0,0,0,0);
-  
-  const leadDays = this.horaCorte ? 1 : 2;
-  const msInDay = 86400000;
-  const firstAvailable = today + (leadDays * msInDay);
+  createDay: function (num, actualDate) {
+    const dayEl = document.createElement('div');
+    const errorEl = document.getElementById('cal-error');
+    dayEl.className = 'cal__date';
+    dayEl.innerHTML = `<span>${num}</span>`;
 
-  // IF DATE IS RESTRICTED
-  if (checkDate <= firstAvailable) {
-    dayEl.classList.add('cal__date--disabled');
+    const checkDate = new Date(actualDate).setHours(0,0,0,0);
+    const today = new Date(this.todaysDate).setHours(0,0,0,0);
+    const dayOfWeek = actualDate.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+
+    // 1. BASE LEAD TIME CALCULATION
+    let leadDays = this.horaCorte ? 1 : 2;
     
-    // Logic for the error message
-    dayEl.addEventListener('click', () => {
-      errorEl.style.display = 'block';
-      if (checkDate === today) {
-        errorEl.innerHTML = "Today is not available for selection.";
-      } else if (checkDate < today) {
-        errorEl.innerHTML = "You cannot select a past date.";
-      } else {
-        errorEl.innerHTML = `This date requires at least ${leadDays + 1} days of preparation.`;
-      }
-      
-      // Auto-hide error after 3 seconds
-      setTimeout(() => { errorEl.style.display = 'none'; }, 3000);
-    });
+    // 2. EXTRA LEAD TIME IF OUTSIDE M50 AND HORA CORTE IS FALSE
+    // Your requirement: "if both are false, add two more days on top"
+    if (!this.fueraM50 && !this.horaCorte) {
+      leadDays += 2; // Total 4 days lead
+    }
 
-  } 
-  // IF DATE IS AVAILABLE
-  else {
-    dayEl.classList.add('cal__date--active');
-    dayEl.addEventListener('click', () => {
-      errorEl.style.display = 'none'; // Hide error if they pick a valid date
-      document.querySelectorAll('.cal__date--selected').forEach(el => el.classList.remove('cal__date--selected'));
-      dayEl.classList.add('cal__date--selected');
-      
-      const formattedDate = actualDate.toLocaleDateString('en-US', { 
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-      });
-      
-      this.pickedLabel.innerHTML = formattedDate;
-      this.hiddenInput.value = formattedDate;
-    });
+    const msInDay = 86400000;
+    const firstAvailableDate = today + (leadDays * msInDay);
+
+    // 3. DEFINE RESTRICTIONS
+    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+    const isPastOrLeadTime = checkDate <= firstAvailableDate;
+    
+    // Rule: if fueraM50 is false, only Tue-Fri (2, 3, 4, 5) are allowed. 
+    // Mon (1) is blocked.
+    const isRestrictedWeekday = !this.fueraM50 && (dayOfWeek === 1);
+
+    // --- EVALUATE ---
+    let isDisabled = false;
+    let reason = "";
+
+    if (checkDate === today) {
+        isDisabled = true;
+        reason = "Today is not available.";
+    } else if (checkDate < today) {
+        isDisabled = true;
+        reason = "Past dates are not available.";
+    } else if (isWeekend) {
+        isDisabled = true;
+        reason = "We are closed on weekends.";
+    } else if (isPastOrLeadTime) {
+        isDisabled = true;
+        reason = `Requires ${leadDays} day(s) preparation.`;
+    } else if (isRestrictedWeekday) {
+        isDisabled = true;
+        reason = "Deliveries in this area are only Tuesday to Friday.";
+    }
+
+    if (isDisabled) {
+        dayEl.classList.add('cal__date--disabled');
+        if (checkDate === today) dayEl.classList.add('cal__date--today');
+
+        dayEl.addEventListener('click', () => {
+            errorEl.style.display = 'block';
+            errorEl.innerHTML = reason;
+            setTimeout(() => { errorEl.style.display = 'none'; }, 3000);
+        });
+    } else {
+        dayEl.classList.add('cal__date--active');
+        dayEl.addEventListener('click', () => {
+            errorEl.style.display = 'none';
+            document.querySelectorAll('.cal__date--selected').forEach(el => el.classList.remove('cal__date--selected'));
+            dayEl.classList.add('cal__date--selected');
+            
+            const formattedDate = actualDate.toLocaleDateString('en-US', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            this.pickedLabel.innerHTML = formattedDate;
+            this.hiddenInput.value = formattedDate;
+        });
+    }
+
+    this.monthArea.appendChild(dayEl);
   }
-
-  this.monthArea.appendChild(dayEl);
-}
 };
 
 document.addEventListener('DOMContentLoaded', () => {
