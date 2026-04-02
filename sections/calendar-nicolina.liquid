@@ -1,294 +1,280 @@
-<!-- pango-calendar-nicolina.liquid -->
-
 <section class="p-{{ section.id }}">
-    <div id="calendar">
-      <div class="month">
-        <ul>
-          <li id="prev">&#10094;</li>
-          <li id="month"></li>
-          <li id="year"></li>
-          <li id="next">&#10095;</li>
-        </ul>
-      </div>
+    <div class="calendar-container">
+        <div class="container">
+            <div class="cal">
+                <div class="cal__header">
+                    <button class="btn-action" data-calendar-toggle="previous" aria-label="Previous Month">
+                        <svg height="24" viewBox="0 0 24 24" width="24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg>
+                    </button>
+                    <div class="cal__header__label" data-calendar-label="month"></div>
+                    <button class="btn-action" data-calendar-toggle="next" aria-label="Next Month">
+                        <svg height="24" viewBox="0 0 24 24" width="24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path></svg>
+                    </button>
+                </div>
+                <div class="cal__week">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+                <div class="cal__body" data-calendar-area="month"></div>
+            </div>
 
-      <ul id="weekdays">
-        <li>Ma</li>
-        <li>Di</li>
-        <li>Wo</li>
-        <li>Do</li>
-        <li>Vr</li>
-        <li>Za</li>
-        <li>Zo</li>
-      </ul>
-
-      <ul id="days"></ul>
-
-      <div>You have clicked on: <span id="select"></span></div>
+            <p class="demo-picked">
+                <strong>Date picked:</strong> <span data-calendar-label="picked">Please select a date</span>
+            </p>
+            <p class="cal-error-message" id="cal-error" style="display:none; color: #d9534f; font-weight: bold; margin-top: 10px;"></p>
+            <input type="hidden" name="attributes[Delivery Date]" id="calendar-date-input">
+        </div>
     </div>
 </section>
 
-
-
-
-{%  # CSS  %}
 <style>
-.p-{{ section.id }}{
-  #calendar {
-    max-width: 600px;
+.p-{{ section.id }} {
+  --primary-color: #0A9297;
+  --bg-light: #E7E9ED;
+  --text-main: #333;
+  --cell-size: 40px; /* Fixed size for the day circles */
+
+  .container {
+    width: 96%;
+    margin: 2rem auto;
+    max-width: 450px;
+    text-align: center;
   }
 
-  .month {
-    padding: 10px;
+  .cal {
     width: 100%;
-    background: #1abc9c;
-    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--bg-light);
   }
 
-  .month ul {
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+  .cal__header {
+    display: flex;
+    padding: 1.2rem;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  .month ul li {
-    color: white;
-    font-size: 20px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-  }
-
-  #weekdays {
-    margin: 0;
-    padding: 10px 0;
-    background-color: #ddd;
-  }
-
-  #weekdays li {
-    color: #666;
-    text-align: center;
-  }
-
-  #days {
-    padding: 10px 0;
-    background: #eee;
-    margin: 0;
-  }
-
-  #days li {
-    list-style-type: none;
-    text-align: center;
-    font-size: 16px;
-    color: #777;
-    padding: 15px;
-    margin: 3px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-  }
-
-  #days li.empty {
+  .btn-action {
+    background: none;
     border: none;
-    cursor: default;
-  }
-
-  #days li.active {
-    background: #1abc9c;
-    color: white !important;
-  }
-
-  #next,
-  #prev {
     cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s;
+  }
+  
+  .cal__header svg { fill: var(--primary-color); }
+  .cal__header__label { font-weight: 800; font-size: 1.1rem; }
+
+  .cal__week {
+    display: flex;
+    background-color: var(--bg-light);
   }
 
-  /* Add media queries for smaller screens */
-  @media screen and (max-width: 720px) {
-    .weekdays li,
-    #days li {
-      width: 13.1%;
-    }
+  .cal__week span {
+    flex: 0 0 14.285%;
+    font-size: 0.7rem;
+    padding: 10px 0;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #666;
   }
 
-  @media screen and (max-width: 420px) {
-    .weekdays li,
-    #days li {
-      width: 12.5%;
-    }
-    #days li .active {
-      padding: 2px;
-    }
+  .cal__body {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    min-height: 280px; /* Prevents height bounce between 5 and 6 row months */
   }
 
-  @media screen and (max-width: 290px) {
-    .weekdays li,
-    #days li {
-      width: 12.2%;
-    }
+  .cal__date {
+    flex: 0 0 14.285%;
+    height: 48px; /* Fixed height for the grid cell */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
   }
 
-  #days,
-  #weekdays {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+  /* Inner Circle - This prevents the bounce because the border/bg is inside a fixed box */
+  .cal__date span {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Circular look */
+    transition: all 0.2s ease;
+    border: 2px solid transparent; /* Placeholder to prevent shift */
+    font-size: 0.9rem;
   }
 
-  @media all and (-ms-high-contrast: none) {
-    #days {
-      display: -ms-grid;
-      -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-      -ms-grid-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-    }
+  /* Today's style: Teal border, no fill */
+  .cal__date--today span {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: bold;
   }
 
+  .cal__date--active { cursor: pointer; }
+
+  .cal__date--active:hover span {
+    background-color: #f0f0f0;
+  }
+
+  /* Selected state: Solid fill */
+  .cal__date--selected span {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .cal__date--disabled {
+    opacity: 0.25;
+    cursor: not-allowed !important;
+  }
+
+  .demo-picked {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+  }
+  .cal-error-message {
+  font-size: 0.85rem;
+  min-height: 1.2rem; /* Keeps space so layout doesn't jump when it appears */
 }
-
+}
 </style>
 
-
-{%  # JAVASCRIPT  %}
 <script>
-    // set variables
-  let today = new Date();
-  let dayInt = today.getDate();
-  let month = today.getMonth();
-  let year = today.getFullYear();
-  // body of the calendar
-  let calendarBody = document.getElementById("days");
+const vanillacalendar = {
+  monthArea: document.querySelector('[data-calendar-area="month"]'),
+  nextBtn: document.querySelector('[data-calendar-toggle="next"]'),
+  prevBtn: document.querySelector('[data-calendar-toggle="previous"]'),
+  label: document.querySelector('[data-calendar-label="month"]'),
+  pickedLabel: document.querySelector('[data-calendar-label="picked"]'),
+  hiddenInput: document.getElementById('calendar-date-input'),
+  
+  date: new Date(),
+  todaysDate: new Date(),
 
-  let months = [
-    "Januari",
-    "Februari",
-    "Maart",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Augustus",
-    "September",
-    "Oktober",
-    "November",
-    "December"
-  ];
+  // SETTINGS
+  horaCorte: true, 
 
-  // next and previous functionality
-  let nextbtn = document.getElementById("next");
-  let prevBtn = document.getElementById("prev");
+  init: function () {
+    this.date.setDate(1);
+    this.render();
+    this.createListeners();
+  },
 
-  nextbtn.onclick = function () {
-    next();
-  };
-  prevBtn.onclick = function () {
-    previous();
-  };
+  createListeners: function () {
+    this.nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.date.setMonth(this.date.getMonth() + 1);
+      this.render();
+    });
+    this.prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.date.setMonth(this.date.getMonth() - 1);
+      this.render();
+    });
+  },
 
-  // on select of date
-  // let selectDay = document.getElementsByClassName("singleDay");
+  render: function () {
+    this.monthArea.innerHTML = '';
+    const month = this.date.getMonth();
+    const year = this.date.getFullYear();
+    
+    const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(this.date);
+    this.label.innerHTML = `${monthName} ${year}`;
 
-  // init calendar
-  showCalendar(month, year);
+    let firstDay = new Date(year, month, 1).getDay(); 
+    let offset = firstDay === 0 ? 6 : firstDay - 1; 
 
-  function showDate(e) {
-    let showYear = e.getAttribute("data-year");
-    let showMonth = e.getAttribute("data-month");
-    let showDay = e.getAttribute("data-day");
-    document.getElementById("select").innerHTML =
-      showDay + " " + months[showMonth] + " " + showYear;
-  }
+    for (let i = 0; i < offset; i++) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'cal__date';
+      this.monthArea.appendChild(emptyDiv);
+    }
 
-  function showCalendar(month, year) {
-    // gets the day of the week for this date
-    let firstDay = new Date(year, month).getDay();
-    // clearing all previous cells
-    calendarBody.innerHTML = "";
-    // checking the mount of days in this month to control the loop
-    let totalDays = daysInMonth(month, year);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    for (let i = 1; i < daysInMonth + 1; i++) {
+      const actualDate = new Date(year, month, i);
+      this.createDay(i, actualDate);
+    }
+  },
 
-    // adding the blank boxes so that date start on correct day of the week
-    // substracting 1 to set monday as the first weekday
-    // and testing for sunday because it became the 7th day
-    blankDates(firstDay === 0 ? 6 : firstDay - 1);
-    // adding the dates to the calendar
-    for (let day = 1; day <= totalDays; day++) {
-      // create li node with text content & apend to body
-      let cell = document.createElement("li");
-      let cellText = document.createTextNode(day);
-      // adding active class if day matches today
-      if (
-        dayInt === day &&
-        month === today.getMonth() &&
-        year === today.getFullYear()
-      ) {
-        cell.classList.add("active");
+createDay: function (num, actualDate) {
+  const dayEl = document.createElement('div');
+  const errorEl = document.getElementById('cal-error');
+  dayEl.className = 'cal__date';
+  dayEl.innerHTML = `<span>${num}</span>`;
+  
+  const checkDate = new Date(actualDate).setHours(0,0,0,0);
+  const today = new Date(this.todaysDate).setHours(0,0,0,0);
+  
+  const leadDays = this.horaCorte ? 1 : 2;
+  const msInDay = 86400000;
+  const firstAvailable = today + (leadDays * msInDay);
+
+  // IF DATE IS RESTRICTED
+  if (checkDate <= firstAvailable) {
+    dayEl.classList.add('cal__date--disabled');
+    
+    // Logic for the error message
+    dayEl.addEventListener('click', () => {
+      errorEl.style.display = 'block';
+      if (checkDate === today) {
+        errorEl.innerHTML = "Today is not available for selection.";
+      } else if (checkDate < today) {
+        errorEl.innerHTML = "You cannot select a past date.";
+      } else {
+        errorEl.innerHTML = `This date requires at least ${leadDays + 1} days of preparation.`;
       }
+      
+      // Auto-hide error after 3 seconds
+      setTimeout(() => { errorEl.style.display = 'none'; }, 3000);
+    });
 
-      // appending date attributes to single date li element
-      cell.setAttribute("data-day", day);
-      cell.setAttribute("data-month", month);
-      cell.setAttribute("data-year", year);
-
-      //appending li to body of calendar
-      cell.classList.add("singleDay");
-      cell.appendChild(cellText);
-      cell.onclick = function (e) {
-        showDate(e.target);
-      };
-      calendarBody.appendChild(cell);
-    }
-
-    // set month string value
-    document.getElementById("month").innerHTML = months[month];
-    // set year string value
-    document.getElementById("year").innerHTML = year;
+  } 
+  // IF DATE IS AVAILABLE
+  else {
+    dayEl.classList.add('cal__date--active');
+    dayEl.addEventListener('click', () => {
+      errorEl.style.display = 'none'; // Hide error if they pick a valid date
+      document.querySelectorAll('.cal__date--selected').forEach(el => el.classList.remove('cal__date--selected'));
+      dayEl.classList.add('cal__date--selected');
+      
+      const formattedDate = actualDate.toLocaleDateString('en-US', { 
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      });
+      
+      this.pickedLabel.innerHTML = formattedDate;
+      this.hiddenInput.value = formattedDate;
+    });
   }
 
-  function daysInMonth(month, year) {
-    // day 0 here returns the last day of the PREVIOUS month
-    return new Date(year, month + 1, 0).getDate();
-  }
+  this.monthArea.appendChild(dayEl);
+}
+};
 
-  function blankDates(count) {
-    // looping to add the correct amount of blank days to the calendar
-    for (let x = 0; x < count; x++) {
-      let cell = document.createElement("li");
-      let cellText = document.createTextNode("");
-      cell.appendChild(cellText);
-      // add the empty class to remove the borders
-      cell.classList.add("empty");
-      calendarBody.appendChild(cell);
-    }
-  }
-
-  function next() {
-    year = month === 11 ? year + 1 : year;
-    month = (month + 1) % 12;
-    showCalendar(month, year);
-  }
-
-  function previous() {
-    year = month === 0 ? year - 1 : year;
-    month = month === 0 ? 11 : month - 1;
-    showCalendar(month, year);
-  }
-
-  // function select(d, m, y) {
-  // 	document.getElementById("select").innerHTML = new Date(y, m, d);
-  // }
-
+document.addEventListener('DOMContentLoaded', () => {
+  vanillacalendar.init();
+});
 </script>
 
-
 {% schema %}
- {
- "name": "Calendar Nicolina",
- "settings": [],
- "presets": [
-   {
-     "name": "Calendar Nicolina",
-     "category": "All Pango"
-   }
- ]
-} 
+{
+  "name": "Calendar Nicolina",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Calendar Nicolina",
+      "category": "All Pango"
+    }
+  ]
+}
 {% endschema %}
-
