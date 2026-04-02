@@ -1,0 +1,66 @@
+{% assign ss = section.settings %}
+<section class="pango-text p-{{ section.id }} highlight">
+  <div class="page-width p-wrapper">
+    <h4> This text is editable in the section:   {{ ss.section_text }} </h4>     
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+<style>
+  .p-{{ section.id }}{    
+    background:{{ss.background_color}};
+    margin-top: -1px;
+    margin-bottom:  -1px;
+    .p-wrapper{
+        padding:0 40px;
+    }
+  }
+  @media(min-width:768px){
+    .p-{{ section.id }} {
+
+    }
+  }
+</style>
+
+{% schema %}
+  {
+  "name": "pango section block test",
+  "blocks": [ 
+    {"type": "pango-block1"},
+    {"type": "pango-beforeAfter-slider"},
+    {"type": "@theme"}
+  ],
+  "settings": [  
+        {
+      "type": "text",
+      "id": "section_text",
+      "label": "Section text"
+    },  
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+  ],
+  "presets": [
+    {
+      "name": "pango section block test",
+    }
+  ]
+
+}  
+{% endschema %}
+
+ {%  comment %}
+  "presets": [
+    {
+      "name": "pango text",
+      "blocks": [
+        {
+           "type": "pango-b-title"
+        }
+      ]
+    }
+  ]
+ {% endcomment %}

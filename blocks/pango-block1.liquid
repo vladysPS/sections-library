@@ -1,0 +1,72 @@
+{% liquid
+  assign block_settings = block.settings 
+
+%}
+<div class="{{ block.id }}">
+    <h6> This is my custom block </h6>
+    <h2> {{ block_settings.block_heading }}  </h2>    
+    {{ block_settings.block_paragraph }} 
+</div>
+
+<style>
+    .{{ block.id }}{
+        width:100%;
+        padding-top: {{ block_settings.padding_top }}px;
+        padding-bottom: {{ block_settings.padding_bottom }}px;
+        background: {{ block_settings.background_color }} ;
+    }
+</style>   
+  
+{% schema %}
+  {
+    "name": "pango block 1",
+    "settings": [
+{
+      "type": "text",
+      "id": "block_heading",
+      "label": "Block heading",
+      "default": "This is the block heading"
+    },
+    {
+      "type": "richtext",
+      "id": "block_paragraph",
+      "label": "Block paragraph"
+    },
+    {
+      "type": "number",
+      "id": "title_font_size",
+      "label": "Title font size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    { "name": "pango block 1" }
+  ]
+}
+{% endschema %}

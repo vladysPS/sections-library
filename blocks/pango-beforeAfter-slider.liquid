@@ -1,0 +1,531 @@
+
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-before-after-slider-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-before-after-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: {{ block.settings.aspect_ratio }}%;
+    overflow: hidden;
+  }
+
+  .ai-before-after-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-before-after-after-{{ ai_gen_id }} {
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path 0.3s ease;
+  }
+
+  .ai-before-after-divider-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: {{ block.settings.divider_width }}px;
+    height: 100%;
+    background-color: {{ block.settings.divider_color }};
+    cursor: ew-resize;
+    z-index: 3;
+    transform: translateX(-50%);
+    transition: left 0.3s ease;
+  }
+
+  .ai-before-after-handle-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: {{ block.settings.handle_size }}px;
+    height: {{ block.settings.handle_size }}px;
+    background-color: {{ block.settings.handle_color }};
+    border: {{ block.settings.handle_border_width }}px solid {{ block.settings.handle_border_color }};
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: ew-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .ai-before-after-handle-{{ ai_gen_id }}:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .ai-before-after-handle-icon-{{ ai_gen_id }} {
+    width: calc({{ block.settings.handle_size }}px * 0.6);
+    height: calc({{ block.settings.handle_size }}px * 0.6);
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .ai-before-after-handle-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.handle_size }}px * 0.5);
+    height: calc({{ block.settings.handle_size }}px * 0.5);
+    color: {{ block.settings.handle_icon_color }};
+  }
+
+  .ai-before-after-label-{{ ai_gen_id }} {
+    position: absolute;
+    top: {{ block.settings.label_position_y }}%;
+    padding: 8px 16px;
+    background-color: {{ block.settings.label_bg_color }};
+    color: {{ block.settings.label_text_color }};
+    font-size: {{ block.settings.label_font_size }}px;
+    font-weight: 600;
+    border-radius: {{ block.settings.label_border_radius }}px;
+    z-index: 2;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-before-after-label-before-{{ ai_gen_id }} {
+    left: {{ block.settings.label_position_x }}%;
+  }
+
+  .ai-before-after-label-after-{{ ai_gen_id }} {
+    right: {{ block.settings.label_position_x }}%;
+  }
+
+  .ai-before-after-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 400px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-before-after-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-before-after-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-before-after-handle-{{ ai_gen_id }} {
+      width: calc({{ block.settings.handle_size }}px * 0.8);
+      height: calc({{ block.settings.handle_size }}px * 0.8);
+    }
+
+    .ai-before-after-handle-icon-{{ ai_gen_id }} {
+      width: calc({{ block.settings.handle_size }}px * 0.48);
+      height: calc({{ block.settings.handle_size }}px * 0.48);
+    }
+
+    .ai-before-after-label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.label_font_size }}px * 0.9);
+      padding: 6px 12px;
+    }
+  }
+{% endstyle %}
+
+<before-after-slider-{{ ai_gen_id }}
+  class="ai-before-after-slider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.before_image and block.settings.after_image %}
+    <div class="ai-before-after-container-{{ ai_gen_id }}">
+      <img
+        src="{{ block.settings.before_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.before_image.alt | default: 'Before image' | escape }}"
+        class="ai-before-after-image-{{ ai_gen_id }} ai-before-after-before-{{ ai_gen_id }}"
+        loading="lazy"
+        width="{{ block.settings.before_image.width }}"
+        height="{{ block.settings.before_image.height }}"
+      >
+      
+      <img
+        src="{{ block.settings.after_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.after_image.alt | default: 'After image' | escape }}"
+        class="ai-before-after-image-{{ ai_gen_id }} ai-before-after-after-{{ ai_gen_id }}"
+        loading="lazy"
+        width="{{ block.settings.after_image.width }}"
+        height="{{ block.settings.after_image.height }}"
+      >
+
+      <div class="ai-before-after-divider-{{ ai_gen_id }}">
+        <div class="ai-before-after-handle-{{ ai_gen_id }}">
+          {% if block.settings.handle_icon %}
+            <img
+              src="{{ block.settings.handle_icon | image_url: width: 100 }}"
+              alt="{{ block.settings.handle_icon.alt | default: 'Handle icon' | escape }}"
+              class="ai-before-after-handle-icon-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15,18 9,12 15,6"></polyline>
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if block.settings.show_labels %}
+        {% if block.settings.before_label != blank %}
+          <div class="ai-before-after-label-{{ ai_gen_id }} ai-before-after-label-before-{{ ai_gen_id }}">
+            {{ block.settings.before_label }}
+          </div>
+        {% endif %}
+        
+        {% if block.settings.after_label != blank %}
+          <div class="ai-before-after-label-{{ ai_gen_id }} ai-before-after-label-after-{{ ai_gen_id }}">
+            {{ block.settings.after_label }}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="ai-before-after-placeholder-{{ ai_gen_id }}">
+      {{ 'image' | placeholder_svg_tag }}
+      <div class="ai-before-after-empty-state-{{ ai_gen_id }}">
+        Add before and after images to get started
+      </div>
+    </div>
+  {% endif %}
+</before-after-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BeforeAfterSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.isDragging = false;
+        this.startX = 0;
+        this.currentPosition = 50;
+      }
+
+      connectedCallback() {
+        this.container = this.querySelector('.ai-before-after-container-{{ ai_gen_id }}');
+        this.divider = this.querySelector('.ai-before-after-divider-{{ ai_gen_id }}');
+        this.afterImage = this.querySelector('.ai-before-after-after-{{ ai_gen_id }}');
+        
+        if (!this.container || !this.divider || !this.afterImage) return;
+
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.divider.addEventListener('mousedown', this.startDrag.bind(this));
+        this.divider.addEventListener('touchstart', this.startDrag.bind(this), { passive: false });
+        
+        document.addEventListener('mousemove', this.drag.bind(this));
+        document.addEventListener('touchmove', this.drag.bind(this), { passive: false });
+        
+        document.addEventListener('mouseup', this.stopDrag.bind(this));
+        document.addEventListener('touchend', this.stopDrag.bind(this));
+        
+        this.container.addEventListener('click', this.handleClick.bind(this));
+      }
+
+      startDrag(e) {
+        this.isDragging = true;
+        this.startX = this.getEventX(e);
+        e.preventDefault();
+      }
+
+      drag(e) {
+        if (!this.isDragging) return;
+        
+        e.preventDefault();
+        const rect = this.container.getBoundingClientRect();
+        const x = this.getEventX(e) - rect.left;
+        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        
+        this.updatePosition(percentage);
+      }
+
+      stopDrag() {
+        this.isDragging = false;
+      }
+
+      handleClick(e) {
+        if (this.isDragging) return;
+        
+        const rect = this.container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        
+        this.updatePosition(percentage);
+      }
+
+      updatePosition(percentage) {
+        this.currentPosition = percentage;
+        this.divider.style.left = percentage + '%';
+        this.afterImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+      }
+
+      getEventX(e) {
+        return e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      }
+    }
+
+    customElements.define('before-after-slider-{{ ai_gen_id }}', BeforeAfterSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Before and after slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        {
+          "value": "56.25",
+          "label": "16:9"
+        },
+        {
+          "value": "66.67",
+          "label": "3:2"
+        },
+        {
+          "value": "75",
+          "label": "4:3"
+        },
+        {
+          "value": "100",
+          "label": "1:1"
+        },
+        {
+          "value": "133.33",
+          "label": "3:4"
+        }
+      ],
+      "default": "66.67"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Divider width",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Handle"
+    },
+    {
+      "type": "range",
+      "id": "handle_size",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Handle size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "handle_color",
+      "label": "Handle background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "handle_border_color",
+      "label": "Handle border",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "handle_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Handle border width",
+      "default": 2
+    },
+    {
+      "type": "image_picker",
+      "id": "handle_icon",
+      "label": "Handle icon image"
+    },
+    {
+      "type": "color",
+      "id": "handle_icon_color",
+      "label": "Default icon color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show labels",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Label font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "label_position_x",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "%",
+      "label": "Label horizontal position",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "label_position_y",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "%",
+      "label": "Label vertical position",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "label_bg_color",
+      "label": "Label background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_text_color",
+      "label": "Label text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "label_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Label border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pango before and after slider"
+    }
+  ]
+}
+{% endschema %}

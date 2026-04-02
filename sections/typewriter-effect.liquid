@@ -1,0 +1,150 @@
+<!-- typewriter-effect.liquid -->
+<section class="p-{{ section.id }}">
+  <div class="p-container">
+    <div class="p-typewriter-content">
+        <div class="parapgraph-container">
+            {{ section.settings.paragraph }}
+        </div>
+      <div>
+          <a href="{{ section.settings.button_link }} " class="main-button-black">{{ section.settings.button_text }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.p-{{ section.id }}{
+    .p-container{
+        padding:{{ section.settings.padding_top-bottom_mobile }}px 42px;
+        .p-typewriter-content{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap:45px;
+            p{
+                font-family: Alpina-Thin;
+                font-size: 40px;
+                font-style: normal;
+                font-weight: 250;
+                line-height: 100%;
+                color: #ccc;
+            }
+            .main-button-black {
+                opacity: 0;
+                transition: none; /* Prevents CSS from fighting with GSAP */
+            }
+        }
+    }
+    @media (min-width: 768px){
+        .p-container{
+            padding:{{ section.settings.padding_top-bottom_desktop }}px 42px;
+            .p-typewriter-content{
+                p{
+                    max-width: 838px;
+                    font-size: 56px;
+                }
+            }
+        }
+    }
+}
+</style>
+
+
+
+<script>
+  window.addEventListener('load', () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const targetText = document.querySelector(".p-{{ section.id }} .parapgraph-container p");
+    const button = document.querySelector(".p-{{ section.id }} .main-button-black");
+    
+    if (targetText && button) {
+      const split = new SplitType(targetText, { types: "words, chars" });
+      let mm = gsap.matchMedia();
+
+      
+      mm.add("(min-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".p-{{ section.id }}",
+            start: "top 80%", 
+            end: "top 20%",   
+            scrub: 0.5,
+            markers:false
+          },
+        });
+
+        tl.to(split.chars, { color: "#000", stagger: 0.1, duration: 0.3 })
+          .to(button, { opacity: 1, duration: 1.5, ease: "power2.out" }, "+=2");
+      });
+
+      
+      mm.add("(max-width: 767px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".p-{{ section.id }}",
+            start: "top 65%", 
+            end: "top 20%",   
+            scrub: 0.5,
+            markers: false
+          },
+        });
+
+        tl.to(split.chars, { color: "#000", stagger: 0.1, duration: 0.3 })
+          .to(button, { opacity: 1, duration: 1.5, ease: "power2.out" }, "+=2");
+      });
+    }
+    
+    ScrollTrigger.refresh();
+  });
+</script>
+{% schema %}
+  {
+  "name": "Typewriter Effect",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "Paragraph",
+      "default": "<p>We transform sensations into passions, encapsulating the purest and deepest essence of our roots in perfumes.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "DISCOVER THE COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top-bottom_mobile",
+      "label": "Padding top-bottom mobile",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_top-bottom_desktop",
+      "label": "Padding top-bottom desktop",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "default": 114
+    }
+  ],
+  "presets": [
+    {
+      "name": "Typewriter Effect",
+      "category": "All Pango"
+    }
+  ]
+}  
+{% endschema %}
