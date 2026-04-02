@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "section": {
       "type": "section",
@@ -68,6 +69,7 @@
         "text_tqQTNE",
         "text_twGGkJ"
       ],
+      "disabled": true,
       "name": "Collection heading",
       "settings": {
         "content_direction": "column",
@@ -210,6 +212,7 @@
           ]
         }
       },
+      "disabled": true,
       "settings": {
         "layout_type": "grid",
         "product_card_size": "medium",
@@ -224,10 +227,16 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "nude_grid_bytqxf": {
+      "type": "nude-grid",
+      "name": "Nude Grid",
+      "settings": {}
     }
   },
   "order": [
     "section",
-    "main"
+    "main",
+    "nude_grid_bytqxf"
   ]
 }
