@@ -12,13 +12,13 @@
                     </button>
                 </div>
                 <div class="cal__week">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    <span>Lun</span><span>Mar</span><span>Mie</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
                 </div>
                 <div class="cal__body" data-calendar-area="month"></div>
             </div>
 
             <p class="demo-picked">
-                <strong>Date picked:</strong> <span data-calendar-label="picked">Please select a date</span>
+                <strong>Fecha seleccionada:</strong> <span data-calendar-label="picked">Por favor seleccione una fecha</span>
             </p>
             <p class="cal-error-message" id="cal-error" style="display:none; color: #d9534f; font-weight: bold; margin-top: 10px;"></p>
             <input type="hidden" name="attributes[Delivery Date]" id="calendar-date-input">
@@ -150,6 +150,9 @@
 </style>
 
 <script>
+const horaCorte = false; 
+const fueraM50 = true; 
+
 const vanillacalendar = {
   monthArea: document.querySelector('[data-calendar-area="month"]'),
   nextBtn: document.querySelector('[data-calendar-toggle="next"]'),
@@ -162,8 +165,8 @@ const vanillacalendar = {
   todaysDate: new Date(),
 
   // --- LOGIC SETTINGS ---
-  horaCorte: true,   // 
-  fueraM50: false,   // 
+  horaCorte: horaCorte,   
+  fueraM50: fueraM50,   
 
   init: function () {
     this.date.setDate(1);
@@ -188,7 +191,7 @@ const vanillacalendar = {
     this.monthArea.innerHTML = '';
     const month = this.date.getMonth();
     const year = this.date.getFullYear();
-    const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(this.date);
+    const monthName = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(this.date);
     this.label.innerHTML = `${monthName} ${year}`;
 
     let firstDay = new Date(year, month, 1).getDay(); 
@@ -243,19 +246,19 @@ const vanillacalendar = {
 
     if (checkDate === today) {
         isDisabled = true;
-        reason = "Today is not available.";
+        reason = "Hoy no estamos disponibles.";
     } else if (checkDate < today) {
         isDisabled = true;
-        reason = "Past dates are not available.";
+        reason = "Las fechas pasadas no están disponibles.";
     } else if (isWeekend) {
         isDisabled = true;
-        reason = "We are closed on weekends.";
+        reason = "Estamos cerrados los fines de semana.";
     } else if (isPastOrLeadTime) {
         isDisabled = true;
-        reason = `Requires ${leadDays} day(s) preparation.`;
+        reason = `Requiere ${leadDays} día(s) de preparación.`;
     } else if (isRestrictedWeekday) {
         isDisabled = true;
-        reason = "Deliveries in this area are only Tuesday to Friday.";
+        reason = "Las entregas en esta área solo estan disponibles de martes a viernes.";
     }
 
     if (isDisabled) {
@@ -274,7 +277,7 @@ const vanillacalendar = {
             document.querySelectorAll('.cal__date--selected').forEach(el => el.classList.remove('cal__date--selected'));
             dayEl.classList.add('cal__date--selected');
             
-            const formattedDate = actualDate.toLocaleDateString('en-US', { 
+            const formattedDate = actualDate.toLocaleDateString('es-ES', { 
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
             });
             this.pickedLabel.innerHTML = formattedDate;
