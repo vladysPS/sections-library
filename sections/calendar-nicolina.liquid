@@ -1,4 +1,31 @@
 <section class="p-{{ section.id }}">
+  <div class="fieldset-wrapper">
+    <fieldset class="visual-selector-corte">
+      <legend>Hora de corte:</legend>
+      <div>
+        <input class="corte-true" type="radio" id="true" name="drone" value="true-corte" checked />
+        <label for="true-corte">True</label>
+      </div>
+
+      <div>
+        <input class="corte-false" type="radio" id="false" name="drone" value="false-corte" />
+        <label for="false-corte">False</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="visual-selector-M50">
+      <legend>Fuera de M50:</legend>
+      <div>
+        <input class="m50-true" type="radio" id="true" name="m50" value="true-M50" checked />
+        <label for="true-M50">True</label>
+      </div>
+
+      <div>
+        <input class="m50-false" type="radio" id="false" name="m50" value="false-M50" />
+        <label for="false-M50">False</label>
+      </div>
+    </fieldset>
+  </div>
     <div class="calendar-container">
         <div class="container">
             <div class="cal">
@@ -32,7 +59,15 @@
   --bg-light: #E7E9ED;
   --text-main: #333;
   --cell-size: 40px; /* Fixed size for the day circles */
-
+  .fieldset-wrapper{
+    padding-inline: 50px;
+    display: flex;
+    gap:40px;
+    .visual-selector-corte,
+    .visual-selector-M50 {
+      width: 50%;
+    }
+  }
   .container {
     width: 96%;
     margin: 2rem auto;
@@ -150,8 +185,53 @@
 </style>
 
 <script>
-const horaCorte = true; 
-const fueraM50 = true; 
+
+// LOGICA DE SELECTORES
+const horaCorteElement = document.querySelector(".visual-selector-corte");
+const radioCorteTrue = horaCorteElement.querySelector(".corte-true");
+const radioCorteFalse = horaCorteElement.querySelector(".corte-false");
+
+radioCorteTrue.addEventListener("change", () => {
+  if (radioCorteTrue.checked) {
+    vanillacalendar.horaCorte = true;
+    vanillacalendar.render();
+  }
+});
+radioCorteFalse.addEventListener("change", () => {
+  if (radioCorteFalse.checked) {
+    vanillacalendar.horaCorte = false;
+    vanillacalendar.render();
+  }
+});
+
+const m50Element = document.querySelector(".visual-selector-M50");
+const radioM50True = m50Element.querySelector(".m50-true");
+const radioM50False = m50Element.querySelector(".m50-false");
+
+radioM50True.addEventListener("change", () => {
+  if (radioM50True.checked) {
+    vanillacalendar.fueraM50 = true;
+    vanillacalendar.render();
+  }
+});
+
+radioM50False.addEventListener("change", () => {
+  if (radioM50False.checked) {
+    vanillacalendar.fueraM50 = false;
+    vanillacalendar.render();
+  }
+});
+
+
+
+
+
+
+
+
+// LOGICA DE CALENDARIO
+let horaCorte = true; 
+let fueraM50 = true; 
 
 const vanillacalendar = {
   monthArea: document.querySelector('[data-calendar-area="month"]'),
