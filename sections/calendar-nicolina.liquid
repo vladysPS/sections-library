@@ -352,9 +352,11 @@ const vanillacalendar = {
     let leadDays = this.horaCorte ? 0 : 0;
     
     // 2. EXTRA LEAD TIME IF OUTSIDE M50 AND HORA CORTE IS FALSE
+    
     if (!this.fueraM50 && !this.horaCorte) {
       leadDays += 1; 
     }
+
 
     // LOGICA POR SI NECESITAN NO AÑADIR UN DIA MAS
     // if (this.cartPlusOne) {
