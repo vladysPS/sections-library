@@ -356,18 +356,16 @@ const vanillacalendar = {
       leadDays += 1; 
     }
 
+    // LOGICA POR SI NECESITAN NO AÑADIR UN DIA MAS
+    // if (this.cartPlusOne) {
+    //   if(!this.horaCorte && !this.fueraM50){
+    //     leadDays = leadDays;
+    //   }else{
+    //     leadDays += 1; 
+    //   }
+    // }
     if (this.cartPlusOne) {
-      if(!this.horaCorte && !this.fueraM50){
-        console.log("horacorte", this.horaCorte);
-        console.log("fuera m50", this.fueraM50);
-        console.log("case both");
-        leadDays = leadDays;
-      }else{
-        console.log("case regular");
-        console.log("horacorte", !this.horaCorte);
-        console.log("fuera m50", !this.fueraM50);
         leadDays += 1; 
-      }
     }
 
     const msInDay = 86400000;
