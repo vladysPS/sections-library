@@ -202,10 +202,8 @@ const dateInput = document.querySelector('.date-selector input[type="date"]');
 console.log("this is the date elemnt", dateInput);
 
 dateInput.addEventListener("change", (e) => {
-const selecetedDateValue = e.target.value; 
+  const selecetedDateValue = e.target.value; 
   if (!selecetedDateValue) return;
-
-  console.log("Selected date value:", selecetedDateValue);
   
   const newDate = new Date(selecetedDateValue);
   vanillacalendar.date = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
