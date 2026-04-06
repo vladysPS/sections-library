@@ -212,7 +212,6 @@
 
 // LOGICA DE SELECTORES
 const cartPlusOneEle = document.querySelector('.visual-cart');
-console.log("cart plus element", cartPlusOneEle);
 const cartPlusTrue = cartPlusOneEle.querySelector(".cart-true");
 const cartPlusFalse = cartPlusOneEle.querySelector(".cart-false");
 
@@ -350,20 +349,29 @@ const vanillacalendar = {
     const dayOfWeek = actualDate.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
 
     // 1. BASE LEAD TIME CALCULATION
-    let leadDays = this.horaCorte ? 1 : 2;
+    let leadDays = this.horaCorte ? 0 : 0;
     
     // 2. EXTRA LEAD TIME IF OUTSIDE M50 AND HORA CORTE IS FALSE
-    // Your requirement: "if both are false, add two more days on top"
     if (!this.fueraM50 && !this.horaCorte) {
-      leadDays += 2; // Total 4 days lead
-    }
-
-    if (this.cartPlusOne) {
       leadDays += 1; 
     }
 
+    if (this.cartPlusOne) {
+      if(!this.horaCorte && !this.fueraM50){
+        console.log("horacorte", this.horaCorte);
+        console.log("fuera m50", this.fueraM50);
+        console.log("case both");
+        leadDays = leadDays;
+      }else{
+        console.log("case regular");
+        console.log("horacorte", !this.horaCorte);
+        console.log("fuera m50", !this.fueraM50);
+        leadDays += 1; 
+      }
+    }
+
     const msInDay = 86400000;
-    const firstAvailableDate = today + (leadDays * msInDay);
+    const firstAvailableDate = today + (leadDays * msInDay) ;
 
     // 3. DEFINE RESTRICTIONS
     const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
@@ -377,8 +385,11 @@ const vanillacalendar = {
     let isDisabled = false;
     let reason = "";
 
-    if (checkDate === today) {
+    if (checkDate === today && !this.fueraM50) {
         isDisabled = true;
+        reason = "Las entregas en esta área solo estan disponibles de martes a viernes.";
+    } else if (checkDate === today && this.horaCorte) {
+        isDisabled = false;
         reason = "Hoy no estamos disponibles.";
     } else if (checkDate < today) {
         isDisabled = true;
@@ -388,15 +399,21 @@ const vanillacalendar = {
         reason = "Estamos cerrados los fines de semana.";
     } else if (isPastOrLeadTime) {
         isDisabled = true;
-        reason = `Requiere ${leadDays} día(s) de preparación.`;
+        reason = `Requiere un día de preparación.`;
     } else if (isRestrictedWeekday) {
         isDisabled = true;
         reason = "Las entregas en esta área solo estan disponibles de martes a viernes.";
+    } 
+
+    if ( checkDate === today && this.cartPlusOne) {
+        isDisabled = true;
+        reason = "Requiere un día de preparación.";
     }
 
+    if (checkDate === today) dayEl.classList.add('cal__date--today');
+
     if (isDisabled) {
-        dayEl.classList.add('cal__date--disabled');
-        if (checkDate === today) dayEl.classList.add('cal__date--today');
+      dayEl.classList.add('cal__date--disabled');
 
         dayEl.addEventListener('click', () => {
             errorEl.style.display = 'block';
