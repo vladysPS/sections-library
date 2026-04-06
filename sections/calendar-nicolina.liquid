@@ -207,16 +207,9 @@ const selecetedDateValue = e.target.value;
 
   console.log("Selected date value:", selecetedDateValue);
   
-  // 1. Create the date object (handling potential timezone shifts)
   const newDate = new Date(selecetedDateValue);
-
-  // 2. Update the calendar's internal reference date (what month it shows)
   vanillacalendar.date = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
-  
-  // 3. Update the calendar's "today" (the anchor for lead-time logic)
   vanillacalendar.todaysDate = newDate;
-
-  // 4. Re-render to show the new month and updated disabled states
   vanillacalendar.render();
 })
 
