@@ -14,26 +14,39 @@
     <fieldset class="visual-selector-corte">
       <legend>Hora de corte:</legend>
       <div>
-        <input class="corte-true" type="radio" id="true" name="drone" value="true-corte" checked />
+        <input class="corte-true" type="radio" id="true-corte" name="drone" value="true-corte" checked />
         <label for="true-corte">Antes </label>
       </div>
 
       <div>
-        <input class="corte-false" type="radio" id="false" name="drone" value="false-corte" />
+        <input class="corte-false" type="radio" id="false-corte" name="drone" value="false-corte" />
         <label for="false-corte">Después</label>
       </div>
     </fieldset>
 
     <fieldset class="visual-selector-M50">
-      <legend>Fuera de M50:</legend>
+      <legend>Zona de entrega:</legend>
       <div>
-        <input class="m50-true" type="radio" id="true" name="m50" value="true-M50" checked />
-        <label for="true-M50">True</label>
+        <input class="m50-true" type="radio" id="true-M50" name="m50" value="true-M50" checked />
+        <label for="true-M50">Dentro de M50</label>
       </div>
 
       <div>
-        <input class="m50-false" type="radio" id="false" name="m50" value="false-M50" />
-        <label for="false-M50">False</label>
+        <input class="m50-false" type="radio" id="false-M50" name="m50" value="false-M50" />
+        <label for="false-M50">Fuera de M50</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="visual-cart">
+      <legend> Cart con Producto +24h:</legend>
+      <div>
+        <input class="cart-true" type="radio" id="true-cart" name="cart" value="true-cart"  />
+        <label for="true-cart">True</label>
+      </div>
+
+      <div>
+        <input class="cart-false" type="radio" id="false-cart" name="cart" value="false-cart" checked />
+        <label for="false-cart">False</label>
       </div>
     </fieldset>
   </div>
@@ -73,11 +86,11 @@
   .fieldset-wrapper{
     padding-inline: 50px;
     display: flex;
+    flex-wrap: wrap;
     gap:40px;
-    .visual-selector-corte,
-    .visual-selector-M50 {
-      width: 50%;
-    }
+  }
+  .fieldset-wrapper > * {
+    flex: 1;
   }
   .container {
     width: 96%;
@@ -198,9 +211,25 @@
 <script>
 
 // LOGICA DE SELECTORES
-const dateInput = document.querySelector('.date-selector input[type="date"]');
-console.log("this is the date elemnt", dateInput);
+const cartPlusOneEle = document.querySelector('.visual-cart');
+console.log("cart plus element", cartPlusOneEle);
+const cartPlusTrue = cartPlusOneEle.querySelector(".cart-true");
+const cartPlusFalse = cartPlusOneEle.querySelector(".cart-false");
 
+cartPlusTrue.addEventListener("change", () => {
+  if (cartPlusTrue.checked) {
+    vanillacalendar.cartPlusOne = true;
+    vanillacalendar.render();
+  }
+});
+cartPlusFalse.addEventListener("change", () => {
+  if (cartPlusFalse.checked) {
+    vanillacalendar.cartPlusOne = false;
+    vanillacalendar.render();
+  }
+});
+
+const dateInput = document.querySelector('.date-selector input[type="date"]');
 dateInput.addEventListener("change", (e) => {
   const selecetedDateValue = e.target.value; 
   if (!selecetedDateValue) return;
@@ -250,6 +279,7 @@ radioM50False.addEventListener("change", () => {
 // LOGICA DE CALENDARIO
 let horaCorte = true; 
 let fueraM50 = true; 
+let cartPlusOne = false;
 
 const vanillacalendar = {
   monthArea: document.querySelector('[data-calendar-area="month"]'),
@@ -264,7 +294,8 @@ const vanillacalendar = {
 
   // --- LOGIC SETTINGS ---
   horaCorte: horaCorte,   
-  fueraM50: fueraM50,   
+  fueraM50: fueraM50,  
+  cartPlusOne: cartPlusOne, 
 
   init: function () {
     this.date.setDate(1);
@@ -325,6 +356,10 @@ const vanillacalendar = {
     // Your requirement: "if both are false, add two more days on top"
     if (!this.fueraM50 && !this.horaCorte) {
       leadDays += 2; // Total 4 days lead
+    }
+
+    if (this.cartPlusOne) {
+      leadDays += 1; 
     }
 
     const msInDay = 86400000;
