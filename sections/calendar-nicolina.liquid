@@ -204,7 +204,7 @@ console.log("this is the date elemnt", dateInput);
 dateInput.addEventListener("change", (e) => {
   const selecetedDateValue = e.target.value; 
   if (!selecetedDateValue) return;
-  
+
   const newDate = new Date(selecetedDateValue);
   vanillacalendar.date = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
   vanillacalendar.todaysDate = newDate;
@@ -250,7 +250,6 @@ radioM50False.addEventListener("change", () => {
 // LOGICA DE CALENDARIO
 let horaCorte = true; 
 let fueraM50 = true; 
-let selectedDate = new Date("2026-04-06");
 
 const vanillacalendar = {
   monthArea: document.querySelector('[data-calendar-area="month"]'),
@@ -261,7 +260,7 @@ const vanillacalendar = {
   hiddenInput: document.getElementById('calendar-date-input'),
   
   date: new Date(),
-  todaysDate: selectedDate,
+  todaysDate: new Date(),
 
   // --- LOGIC SETTINGS ---
   horaCorte: horaCorte,   
