@@ -349,12 +349,17 @@ const vanillacalendar = {
     const dayOfWeek = actualDate.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
 
     // 1. BASE LEAD TIME CALCULATION
-    let leadDays = this.horaCorte ? 0 : 0;
+    let leadDays = this.horaCorte ? 0 : 1;
     
     // 2. EXTRA LEAD TIME IF OUTSIDE M50 AND HORA CORTE IS FALSE
     
     if (!this.fueraM50 && !this.horaCorte) {
       leadDays += 1; 
+    } else if (!this.fueraM50){
+      leadDays += 1; 
+    } 
+    if (this.cartPlusOne) {
+        leadDays += 1; 
     }
 
 
@@ -366,9 +371,7 @@ const vanillacalendar = {
     //     leadDays += 1; 
     //   }
     // }
-    if (this.cartPlusOne) {
-        leadDays += 1; 
-    }
+   
 
     const msInDay = 86400000;
     const firstAvailableDate = today + (leadDays * msInDay) ;
@@ -385,12 +388,9 @@ const vanillacalendar = {
     let isDisabled = false;
     let reason = "";
 
-    if (checkDate === today && !this.fueraM50) {
+     if ( checkDate === today) {
         isDisabled = true;
-        reason = "Las entregas en esta área solo estan disponibles de martes a viernes.";
-    } else if (checkDate === today && this.horaCorte) {
-        isDisabled = false;
-        reason = "Hoy no estamos disponibles.";
+        reason = "Requiere un día de preparación.";
     } else if (checkDate < today) {
         isDisabled = true;
         reason = "Las fechas pasadas no están disponibles.";
@@ -405,10 +405,7 @@ const vanillacalendar = {
         reason = "Las entregas en esta área solo estan disponibles de martes a viernes.";
     } 
 
-    if ( checkDate === today && this.cartPlusOne) {
-        isDisabled = true;
-        reason = "Requiere un día de preparación.";
-    }
+  
 
     if (checkDate === today) dayEl.classList.add('cal__date--today');
 
