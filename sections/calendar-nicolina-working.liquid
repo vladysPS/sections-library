@@ -6,8 +6,8 @@
         type="date"
         id="start"
         name="trip-start"
-        value="2026-04-04"
-        min="2024-04-01"
+        value="2026-02-04"
+        min="2026-04-01"
         max="2100-12-31" />
 
     </div>
@@ -209,9 +209,6 @@
 </style>
 
 <script>
-function isUserInMadridTimezone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone === "Europe/Madrid";
-}
 
 //SELECTORES
 const cartPlusOneEle = document.querySelector('.visual-cart');
@@ -276,20 +273,19 @@ radioM50False.addEventListener("change", () => {
   }
 });
 
-// function getMadridDate() {
-//   return new Date(
-//     new Intl.DateTimeFormat("en-CA", {
-//       timeZone: "Europe/Madrid",
-//       year: "numeric",
-//       month: "2-digit",
-//       day: "2-digit"
-//     }).format(new Date())
-//   );
-// }
+function getMadridDate() {
+  return new Date(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Madrid",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date())
+  );
+}
 
-// const madridDate = getMadridDate();
-// console.log("madrid date", madridDate);
-// console.log("auto date", new Date() );
+const madridDate = getMadridDate();
+console.log("madrid date", madridDate);
 
 // LÓGICA DE CALENDARIO
 let horaCorte = true; 
@@ -538,22 +534,7 @@ const vanillacalendar = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const calendarBody = document.querySelector('[data-calendar-area="month"]');
-
-  if (isUserInMadridTimezone()) {
-    vanillacalendar.init();
-  } else {
-    calendarBody.innerHTML = `
-      <div style="
-        padding: 20px;
-        text-align: center;
-        color: #d9534f;
-        font-weight: 600;
-      ">
-        Las entregas solo están disponibles en la zona y horario de Madrid
-      </div>
-    `;
-  }
+  vanillacalendar.init();
 });
 </script>
 
