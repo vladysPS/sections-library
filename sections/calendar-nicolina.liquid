@@ -295,6 +295,10 @@ radioM50False.addEventListener("change", () => {
 let horaCorte = true; 
 let dentroM50 = true; 
 let cartPlusOne = false;
+let fueraM50Interval = 2;
+let specialProductInterval = 1;
+let horaCorteCase1 = 0;
+let horaCorteCase2 = 1;
 
 // LÓGICA DÍAS NO DISPONIBLES
 function normalizeDate(date) {
@@ -302,13 +306,7 @@ function normalizeDate(date) {
 }
 
 let diasNoDisponibles = [
-  '2026-04-20',
-  '2026-04-21',
-  '2026-04-22',
-  '2026-04-23',
-  '2026-04-24',
-  '2026-04-25',
-  '2026-04-26',
+  '2026-04-14',
 ].map(d => normalizeDate(d));
 
 function isDateUnavailable(date) {
@@ -438,16 +436,16 @@ const vanillacalendar = {
     const isBlockedByAdmin = isDateUnavailable(actualDate);
 
     // 1. SUMA DIAS HORA CORTE
-    let leadDays = this.horaCorte ? 0 : 1;
+    let leadDays = this.horaCorte ? horaCorteCase1 : horaCorteCase2;
     
     // 2. EXTRA FUERA M50
     if (!this.dentroM50){
-      leadDays += 2; 
+      leadDays += fueraM50Interval; 
     } 
     // SOLO SE AÑADE PROD+24H SI ESTAMOS DENTRO DE M50
     if (this.dentroM50){
       if (this.cartPlusOne) {
-          leadDays += 1; 
+          leadDays += specialProductInterval; 
       }
     }
    
