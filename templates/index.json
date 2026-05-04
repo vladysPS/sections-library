@@ -250,6 +250,11 @@
       "settings": {
         "numero_de_telfono": "611233444"
       }
+    },
+    "pango_recommended_products_4XbpNr": {
+      "type": "pango-recommended-products",
+      "name": "Pango recommended products",
+      "settings": {}
     }
   },
   "order": [
@@ -258,6 +263,7 @@
     "hero_dB9Aye",
     "typewriter_effect_ANgX4Y",
     "calendar_nicolina_jci9jA",
-    "pango_whatsapp_epT7eL"
+    "pango_whatsapp_epT7eL",
+    "pango_recommended_products_4XbpNr"
   ]
 }
