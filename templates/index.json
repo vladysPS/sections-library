@@ -243,6 +243,13 @@
       "type": "calendar-nicolina",
       "name": "Calendar Nicolina",
       "settings": {}
+    },
+    "pango_whatsapp_epT7eL": {
+      "type": "pango-whatsapp",
+      "name": "Pango WhatsApp Button",
+      "settings": {
+        "numero_de_telfono": "611233444"
+      }
     }
   },
   "order": [
@@ -250,6 +257,7 @@
     "email_base_cBBTxc",
     "hero_dB9Aye",
     "typewriter_effect_ANgX4Y",
-    "calendar_nicolina_jci9jA"
+    "calendar_nicolina_jci9jA",
+    "pango_whatsapp_epT7eL"
   ]
 }
