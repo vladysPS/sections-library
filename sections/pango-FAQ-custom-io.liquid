@@ -1,0 +1,300 @@
+<!-- pango-faq.liquid -->
+
+
+{% assign faqs_metacampo =  product.metafields.custom.faqs.value %}
+ 
+{% if faqs_metacampo != blank %}
+
+ 
+    <div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
+        {%- capture section_header -%}
+        {%- if section.settings.subheading != blank or section.settings.title != blank or section.settings.content != blank or section.settings.button_text != blank -%}
+            <div class="section-header">
+            <div class="prose {% if section.settings.layout == 'stacked' %}prose-justify-center{% endif %}">
+                {%- render 'subheading', content: section.settings.subheading -%}
+                {%- render 'heading', content: section.settings.title, balance_text: true, style: section.settings.title_tag, html_tag: 'h2' -%}
+
+                <div class="max-w-sm">
+                {{- section.settings.content -}}
+                </div>
+
+                {%- render 'button', content: section.settings.button_text, href: section.settings.button_url, style: section.settings.button_style -%}
+            </div>
+            </div>
+        {%- endif -%}
+        {%- endcapture -%}
+
+        {%- capture section_content -%}
+        <div class="faq">
+            <div class="faq__content">
+                {% for faq_group in faqs_metacampo %}
+
+                    
+                    {% assign faq_content = faq_group.faqs | metafield_tag %}
+                    {% assign bloques = faq_content | split: '<h' %}
+                    {% for bloque in bloques %}
+
+                        {% assign heading_split = bloque | split: '>' %}
+                        {% assign heading_level_and_content = heading_split[0] %}
+                        {% assign content_split = bloque | split: '</h' %}
+                        
+                        {% assign fin_encabezado =  heading_level_and_content  | append: '>'  %}
+                        {% assign pregunta = content_split[0]  | remove: fin_encabezado %}   
+                        {% assign respuesta = content_split[1] | remove: fin_encabezado  | remove: '</div>'  %}
+
+                        {% if pregunta != "" %}
+                            {%- liquid
+                            assign use_secondary_background = false
+
+                            if section.settings.accordion_style == 'background' and section.settings.color_scheme.settings.background_gradient != blank or section.settings.color_scheme.settings.background != section.settings.color_scheme.settings.secondary_background
+                                assign use_secondary_background = true
+                            endif
+
+        
+                            if section.settings.question_style == 'subheading'
+                            render 'accordion', title: pregunta, content: respuesta, prose_content: true, subheading_title: true, icon: block.settings.icon, custom_icon: block.settings.custom_icon, icon_width: block.settings.icon_width, mobile_icon_width: block.settings.mobile_icon_width, use_secondary_background: use_secondary_background, block: block, html_tag: 'h3'
+                            else
+                            render 'accordion', title: pregunta, content: respuesta, prose_content: true, icon: block.settings.icon, custom_icon: block.settings.custom_icon, icon_width: block.settings.icon_width, mobile_icon_width: block.settings.mobile_icon_width, use_secondary_background: use_secondary_background, block: block, html_tag: 'h3'
+                            endif
+                        
+                            -%}
+                        {% endif %}    
+
+                    {% endfor %}
+                {% endfor %}
+
+ 
+            </div>
+        </div>
+        {%- endcapture -%}
+
+        {%- if section.settings.layout == 'split' -%}
+        <div class="section-split">
+            <div class="section-split__column">
+            {{- section_header -}}
+            </div>
+
+            <div class="section-split__column">
+            {{- section_content -}}
+            </div>
+        </div>
+        {%- else -%}
+        <div class="container section-spacing">
+            <div class="section-stack max-w-lg mx-auto text-center">
+            {{- section_header -}}
+            {{- section_content -}}
+            </div>
+        </div>
+        {%- endif -%}
+    </div>
+
+    {%- comment -%}We also output the content with JSON microdata for SEO{%- endcomment -%}
+
+    <script type="application/ld+json">
+
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {% assign is_first = true %}
+          {% for faq_group in faqs_metacampo %}
+            {% assign faq_content = faq_group.faqs | metafield_tag %}
+            {% assign bloques = faq_content | split: '<h' %}
+            {% for bloque in bloques %}
+
+              {% assign heading_split = bloque | split: '>' %}
+              {% assign heading_level_and_content = heading_split[0] %}
+              {% assign content_split = bloque | split: '</h' %}
+              
+              {% assign fin_encabezado =  heading_level_and_content  | append: '>'  %}
+              {% assign pregunta = content_split[0]  | remove: fin_encabezado %}   
+              {% assign respuesta = content_split[1] | remove: fin_encabezado  | remove: '</div>'  %}
+
+              {% if pregunta != "" %}
+                {% unless is_first %},{% endunless %}
+                {
+                  "@type": "Question",
+                  "name": {{ pregunta | json }},
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": {{ respuesta | json }}
+                  }
+                }
+                {% assign is_first = false %}
+              {% endif %}
+            {% endfor %}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+
+ 
+{% schema %}
+{
+  "name": "Pango Faqs",
+  "class": "shopify-section--faq",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:global.layout.layout",
+      "options": [
+        {
+          "value": "split",
+          "label": "t:global.layout.layout_options.split"
+        },
+        {
+          "value": "stacked",
+          "label": "t:global.layout.layout_options.stacked"
+        }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "select",
+      "id": "accordion_style",
+      "label": "t:sections.faq.accordion_style",
+      "options": [
+        {
+          "value": "background",
+          "label": "t:sections.faq.accordion_style_options.background"
+        },
+        {
+          "value": "border",
+          "label": "t:sections.faq.accordion_style_options.border"
+        }
+      ],
+      "default": "border"
+    },
+    {
+      "type": "select",
+      "id": "question_style",
+      "label": "t:sections.faq.question_style",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:sections.faq.question_style_options.text"
+        },
+        {
+          "value": "subheading",
+          "label": "t:sections.faq.question_style_options.subheading"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "t:global.text.subheading",
+      "default": "We're here to help"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:global.text.heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "select",
+      "id": "title_tag",
+      "label": "t:global.text.heading_size",
+      "options": [
+        {
+          "value": "display-xl",
+          "label": "Display XL"
+        },
+        {
+          "value": "display-l",
+          "label": "Display L"
+        },
+        {
+          "value": "display-m",
+          "label": "Display M"
+        },
+        {
+          "value": "h1",
+          "label": "XX-Large"
+        },
+        {
+          "value": "h2",
+          "label": "X-Large"
+        },
+        {
+          "value": "h3",
+          "label": "Large"
+        },
+        {
+          "value": "h4",
+          "label": "Medium"
+        },
+        {
+          "value": "h5",
+          "label": "Small"
+        },
+        {
+          "value": "h6",
+          "label": "X-Small"
+        },
+        {
+          "value": "h7",
+          "label": "XX-Small"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content",
+      "default": "<p>Use the FAQ section to answer your customers' most frequent questions.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:global.text.button_text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "t:global.text.button_link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:global.text.button_style",
+      "options": [
+        {
+          "value": "outline",
+          "label": "t:global.text.button_style_options.outline"
+        },
+        {
+          "value": "solid",
+          "label": "t:global.text.button_style_options.solid"
+        },
+        {
+          "value": "link",
+          "label": "t:global.text.button_style_options.link"
+        }
+      ],
+      "default": "solid"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pango Faqs",
+      "category": "t:global.categories.trust_social",
+    }
+  ]
+}
+{% endschema %}
