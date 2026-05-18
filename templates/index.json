@@ -12,20 +12,38 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
+        "slide_image_yeMjRi": {
+          "type": "slide-image",
+          "settings": {
+            "image_mobile": "shopify://shop_images/raices-scented.png",
+            "image_desktop": "shopify://shop_images/raices-scented.png"
+          }
+        },
+        "slide_video_CrbdxX": {
+          "type": "slide-video",
+          "settings": {
+            "video_mobile": "shopify://files/videos/Proyecto de vídeo 3.mp4",
+            "video_desktop": "shopify://files/videos/otz-video-banner.mp4"
+          }
+        },
         "slide_image_tEfND8": {
           "type": "slide-image",
           "settings": {
-            "image_mobile": "shopify://shop_images/arcadia-scented.png"
+            "image_mobile": "shopify://shop_images/arcadia-scented.png",
+            "image_desktop": "shopify://shop_images/arcadia-scented.png"
           }
         },
         "slide_video_HAC4tk": {
           "type": "slide-video",
           "settings": {
-            "video_mobile": "shopify://files/videos/sec-3-video.mp4"
+            "video_mobile": "shopify://files/videos/sec-3-video.mp4",
+            "video_desktop": "shopify://files/videos/Proyecto de vídeo 3.mp4"
           }
         }
       },
       "block_order": [
+        "slide_image_yeMjRi",
+        "slide_video_CrbdxX",
         "slide_image_tEfND8",
         "slide_video_HAC4tk"
       ],
