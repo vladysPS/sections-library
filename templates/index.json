@@ -12,26 +12,26 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
-        "slide_ad8QqU": {
-          "type": "slide",
+        "slide_video_HAC4tk": {
+          "type": "slide-video",
           "settings": {
-            "image_mobile": "shopify://shop_images/arcadia-scented.png"
+            "video_mobile": "shopify://files/videos/sec-3-video.mp4"
           }
         },
-        "slide_rVYbfa": {
-          "type": "slide",
+        "slide_image_7A4V3z": {
+          "type": "slide-image",
           "settings": {
-            "image_desktop": "shopify://shop_images/raices-scented.png"
+            "image_mobile": "shopify://shop_images/arcadia-scented.png"
           }
         }
       },
       "block_order": [
-        "slide_ad8QqU",
-        "slide_rVYbfa"
+        "slide_video_HAC4tk",
+        "slide_image_7A4V3z"
       ],
       "name": "Pango Slideshow",
       "settings": {
-        "color_text": "#FFFFFF",
+        "color_text": "#ffffff",
         "title": "Title",
         "subtitle": "Lorem ipsum odor amet, consectetuer adipiscing elit.",
         "button_1": "MAN",
