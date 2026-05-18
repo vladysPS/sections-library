@@ -36,14 +36,11 @@
 				{%- assign video_mobile = block.settings.video_mobile -%}
 				{%- assign video_desktop = block.settings.video_desktop -%}
 					<div class="swiper-slide">
-                    {%- if image_mobile or image_desktop -%}
 						{{ image_mobile | image_url: width: image_mobile.width | image_tag: class: 'hideOnDesktop', loading: 'lazy' }}
 						{{ image_desktop | image_url: width: image_desktop.width | image_tag: class: 'hideOnMobile', loading: 'lazy' }}
-                    {%- endif-%}
-                    {%- if video_mobile or video_desktop -%}
+
 						{{ video_mobile | video_tag: autoplay: true, loop: true, muted: true, class: 'hideOnDesktop' }}
 						{{ video_desktop | video_tag: autoplay: true, loop: true, muted: true, class: 'hideOnMobile' }}
-                    {%- endif-%}
 					</div>
 				{%- endfor -%}
 			</div>
