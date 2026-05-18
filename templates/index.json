@@ -12,6 +12,12 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
+        "slide_image_tEfND8": {
+          "type": "slide-image",
+          "settings": {
+            "image_mobile": "shopify://shop_images/arcadia-scented.png"
+          }
+        },
         "slide_video_HAC4tk": {
           "type": "slide-video",
           "settings": {
@@ -20,6 +26,7 @@
         }
       },
       "block_order": [
+        "slide_image_tEfND8",
         "slide_video_HAC4tk"
       ],
       "name": "Pango Slideshow",
