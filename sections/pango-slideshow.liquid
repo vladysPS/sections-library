@@ -31,15 +31,11 @@
 		<div class="swiper mySwiper">
 			<div class="swiper-wrapper">
 				{%- for block in section.blocks -%}
-
 				{%- assign image_mobile = block.settings.image_mobile -%}
 				{%- assign image_desktop = block.settings.image_desktop -%}
-
 				{%- assign video_mobile = block.settings.video_mobile -%}
 				{%- assign video_desktop = block.settings.video_desktop -%}
 					<div class="swiper-slide">
-                                        {%- if block.type == "slide-image"-%}
-                {%- endif -%}
                     {%- if image_mobile or image_desktop -%}
 						{{ image_mobile | image_url: width: image_mobile.width | image_tag: class: 'hideOnDesktop', loading: 'lazy' }}
 						{{ image_desktop | image_url: width: image_desktop.width | image_tag: class: 'hideOnMobile', loading: 'lazy' }}
