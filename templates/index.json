@@ -12,16 +12,40 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
+        "slide_video_cnKQx6": {
+          "type": "slide-video",
+          "settings": {
+            "video_mobile": "shopify://files/videos/Proyecto de vídeo 3.mp4",
+            "video_desktop": "shopify://files/videos/VideoEssence-OTZ.mp4"
+          }
+        },
+        "slide_image_FUWFyb": {
+          "type": "slide-image",
+          "settings": {
+            "image_mobile": "shopify://shop_images/merina-scemted.png",
+            "image_desktop": "shopify://shop_images/blackcurrant-texture.png"
+          }
+        },
         "slide_video_CrbdxX": {
           "type": "slide-video",
           "settings": {
             "video_mobile": "shopify://files/videos/Proyecto de vídeo 3.mp4",
             "video_desktop": "shopify://files/videos/otz-video-banner.mp4"
           }
+        },
+        "slide_image_QFLGab": {
+          "type": "slide-image",
+          "settings": {
+            "image_mobile": "shopify://shop_images/raices-scented.png",
+            "image_desktop": "shopify://shop_images/air-texture-2.png"
+          }
         }
       },
       "block_order": [
-        "slide_video_CrbdxX"
+        "slide_video_cnKQx6",
+        "slide_image_FUWFyb",
+        "slide_video_CrbdxX",
+        "slide_image_QFLGab"
       ],
       "name": "Pango Slideshow",
       "settings": {
