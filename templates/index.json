@@ -9,6 +9,60 @@
  */
 {
   "sections": {
+    "pango_slideshow_JqPKpi": {
+      "type": "pango-slideshow",
+      "blocks": {
+        "slide_ad8QqU": {
+          "type": "slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/arcadia-scented.png"
+          }
+        },
+        "slide_rVYbfa": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/raices-scented.png"
+          }
+        }
+      },
+      "block_order": [
+        "slide_ad8QqU",
+        "slide_rVYbfa"
+      ],
+      "name": "Pango Slideshow",
+      "settings": {
+        "color_text": "#FFFFFF",
+        "title": "Title",
+        "subtitle": "Lorem ipsum odor amet, consectetuer adipiscing elit.",
+        "button_1": "MAN",
+        "button_1_url": "",
+        "button_2": "WOMAN",
+        "button_2_url": "",
+        "section_height_mobile": 90,
+        "section_height_desktop": 90,
+        "title_font_size_mobile": 60,
+        "subtitle_font_size_mobile": 26,
+        "content_text_align_mobile": "center",
+        "content_padding_mobile": 30,
+        "content_positioning_mobile": "middle_center",
+        "title_font_size_desktop": 70,
+        "subtitle_font_size_desktop": 34,
+        "content_text_align_desktop": "center",
+        "content_padding_desktop": 48,
+        "content_max_width_desktop": 700,
+        "content_positioning_desktop": "middle_center",
+        "max_space_between_buttons": false,
+        "overlay_color": "#000000",
+        "overlay_opacity": 15,
+        "full_section_overlay": true,
+        "gradient_overlay_percentage": 40,
+        "gradient_overlay_degrees": 200,
+        "section_padding_top_mobile": 0,
+        "section_padding_bottom_mobile": 0,
+        "section_padding_top_desktop": 0,
+        "section_padding_bottom_desktop": 0
+      }
+    },
     "testing_basics_1_GpJ98w": {
       "type": "testing-basics-1",
       "disabled": true,
@@ -258,6 +312,7 @@
     }
   },
   "order": [
+    "pango_slideshow_JqPKpi",
     "testing_basics_1_GpJ98w",
     "email_base_cBBTxc",
     "hero_dB9Aye",
