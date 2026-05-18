@@ -66,6 +66,9 @@
     .hideOnDesktop{
         display:none;
     }
+    .hideOnMobile{
+        display:block;
+    }
 
 	.p-inner{
 		height: {{ ss.section_height_mobile }}vh; 
@@ -168,7 +171,12 @@
     .p-{{ section.id }}{
 		padding-top:{{ ss.section_padding_top_desktop}}px;
 		padding-bottom:{{ ss.section_padding_bottom_desktop}}px;
-
+        .hideOnDesktop{
+            display:block;
+        }
+        .hideOnMobile{
+            display:none;
+        }
 		.p-inner{
 			height: {{ ss.section_height_desktop }}vh; 
 
