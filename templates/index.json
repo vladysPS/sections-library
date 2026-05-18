@@ -12,32 +12,15 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
-        "slide_video_VdfJxV": {
-          "type": "slide-video",
-          "settings": {}
-        },
-        "slide_image_NeJTRY": {
-          "type": "slide-image",
-          "settings": {}
-        },
         "slide_video_HAC4tk": {
           "type": "slide-video",
           "settings": {
             "video_mobile": "shopify://files/videos/sec-3-video.mp4"
           }
-        },
-        "slide_image_7A4V3z": {
-          "type": "slide-image",
-          "settings": {
-            "image_mobile": "shopify://shop_images/arcadia-scented.png"
-          }
         }
       },
       "block_order": [
-        "slide_video_VdfJxV",
-        "slide_image_NeJTRY",
-        "slide_video_HAC4tk",
-        "slide_image_7A4V3z"
+        "slide_video_HAC4tk"
       ],
       "name": "Pango Slideshow",
       "settings": {
