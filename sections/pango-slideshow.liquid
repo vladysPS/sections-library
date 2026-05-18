@@ -43,7 +43,7 @@
                     {%- assign video_mobile = block.settings.video_mobile -%}
                     {%- assign video_desktop = block.settings.video_desktop -%}
                         <div class="swiper-slide">
-                            {{ video_mobile | video_tag: autoplay: true, loop: true, muted: true, class: 'hideOnDesktop' }}
+                            {% comment %} {{ video_mobile | video_tag: autoplay: true, loop: true, muted: true, class: 'hideOnDesktop' }} {% endcomment %}
                             {{ video_desktop | video_tag: autoplay: true, loop: true, muted: true, class: 'hideOnMobile' }}
                         </div>                    
                     {% endif %}    
@@ -63,9 +63,6 @@
 .p-{{ section.id }}{
     padding-top:{{ ss.section_padding_top_mobile}}px;
     padding-bottom:{{ ss.section_padding_bottom_mobile}}px;
-    .hideOnMobile{
-        display:none;
-    }
 
 	.p-inner{
 		height: {{ ss.section_height_mobile }}vh; 
