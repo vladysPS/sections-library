@@ -12,6 +12,14 @@
     "pango_slideshow_JqPKpi": {
       "type": "pango-slideshow",
       "blocks": {
+        "slide_video_VdfJxV": {
+          "type": "slide-video",
+          "settings": {}
+        },
+        "slide_image_NeJTRY": {
+          "type": "slide-image",
+          "settings": {}
+        },
         "slide_video_HAC4tk": {
           "type": "slide-video",
           "settings": {
@@ -26,6 +34,8 @@
         }
       },
       "block_order": [
+        "slide_video_VdfJxV",
+        "slide_image_NeJTRY",
         "slide_video_HAC4tk",
         "slide_image_7A4V3z"
       ],
