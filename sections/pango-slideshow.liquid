@@ -613,8 +613,8 @@ document.addEventListener('slider:loaded', ()=>{
   ], 
   "blocks": [
     {
-      "type": "slide",
-      "name": "Slide",
+      "type": "slide-image",
+      "name": "Slide Image",
       "settings": [
         {
             "type": "image_picker",
@@ -625,7 +625,13 @@ document.addEventListener('slider:loaded', ()=>{
             "type": "image_picker",
             "id": "image_desktop",
             "label": "Imagen desktop"
-        },
+        }
+      ]
+    },
+    {
+        "type":"slide-video",
+        "name":"Slide Video",
+        "settings": [
         {
             "type": "video",
             "id": "video_mobile",
@@ -636,7 +642,7 @@ document.addEventListener('slider:loaded', ()=>{
             "id": "video_desktop",
             "label": "Video desktop"
         }
-      ]
+        ]
     }
   ],
   "presets": [
