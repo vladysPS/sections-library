@@ -1,0 +1,64 @@
+<!-- pango-variant-test.liquid -->
+
+
+<section class="p-{{ section.id }}">
+ <div class="page-width grid">
+  <div class="image-gallery palevioletred">
+    HERE WILL BE THE IMAGES
+  </div>
+  <div class="prod-info aquamarine">
+    HERE WILL BE THE TITLE 
+  </div>
+ </div> 
+</section>
+
+
+
+
+{%  # CSS  %}
+<style>
+.p-{{ section.id }}{
+.palevioletred{
+    border: 1.5px solid palevioletred;
+}
+.aquamarine{
+    border: 1.5px solid aquamarine;
+}
+.grid{
+    display: grid;
+    min-height: 70vh;
+    grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+
+@media(min-width:768px){
+ .p-{{ section.id }}{
+  
+ }
+}
+
+
+</style>
+
+
+{%  # JAVASCRIPT  %}
+<script>
+  
+</script>
+
+
+{% schema %}
+ {
+ "name": "Pango Variant Test",
+ "settings": [],
+ "presets": [
+   {
+     "name": "Pango Variant Test",
+     "category": "All Pango"
+   }
+ ]
+} 
+{% endschema %}
+
