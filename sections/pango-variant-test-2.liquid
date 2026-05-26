@@ -11,6 +11,7 @@
     {% endfor %}
   </p-product-gallery2>
   <div class="prod-info aquamarine">
+
     <h1>{{product.title}}</h1>
     {% content_for 'block', type: 'variant-picker', id: 'variant-picker', closest.product: current_product %}
 
@@ -25,7 +26,7 @@
 <style>
 .p-{{ section.id }}{
     
-p-product-gallery[no-js] .image-container {
+p-product-gallery2[no-js] .image-container {
     display: none;
 }
 .hidden{
