@@ -11,7 +11,45 @@
   "sections": {
     "pango_variant_test_NVhMwW": {
       "type": "pango-variant-test",
+      "blocks": {
+        "variant-picker": {
+          "type": "variant-picker",
+          "static": true,
+          "settings": {
+            "variant_style": "buttons",
+            "show_swatches": true,
+            "alignment": "left",
+            "padding-block-start": 0,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "disabled": true,
       "name": "Pango Variant Test",
+      "settings": {}
+    },
+    "pango_variant_test_2_QW6FBn": {
+      "type": "pango-variant-test-2",
+      "blocks": {
+        "variant-picker": {
+          "type": "variant-picker",
+          "static": true,
+          "settings": {
+            "variant_style": "buttons",
+            "show_swatches": true,
+            "alignment": "left",
+            "padding-block-start": 0,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "name": "Pango Variant Test 2",
       "settings": {}
     },
     "main": {
@@ -417,6 +455,7 @@
   },
   "order": [
     "pango_variant_test_NVhMwW",
+    "pango_variant_test_2_QW6FBn",
     "main",
     "product_recommendations_qggXJq"
   ]
