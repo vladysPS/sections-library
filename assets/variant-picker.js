@@ -30,7 +30,7 @@ export default class VariantPicker extends Component {
   variantChanged(event) {
     if (!(event.target instanceof HTMLElement)) return;
     console.log("Variant changed:", event.target.defaultValue);
-    this.sendDataToGallery(event);
+    this.pangoSendDataToGallery(event);
     const selectedOption =
       event.target instanceof HTMLSelectElement ? event.target.options[event.target.selectedIndex] : event.target;
     
@@ -76,7 +76,7 @@ export default class VariantPicker extends Component {
     }
   }
   // PANGO CUSTOM EVENT FOR PRODUCT GALLERY
-  sendDataToGallery(event) {
+  pangoSendDataToGallery(event) {
     console.log("Variant changed, sending data to gallery:", event.target.defaultValue);
 
     const color = event.target.defaultValue;

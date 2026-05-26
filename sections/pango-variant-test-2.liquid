@@ -1,0 +1,94 @@
+<!-- pango-variant-test-2.liquid -->
+{%- assign current_product = product | default: closest.product -%}
+
+<section class="p-{{ section.id }}">
+ <div class="page-width grid" >
+  <p-product-gallery2 class="image-gallery-grid palevioletred" no-js>
+    {% for media in current_product.images %}
+        <div class="image-container" data-alt="{{ media.alt }}">
+            {{ media | image_url: width: 800 | image_tag: alt: media.alt | escape }}
+        </div>
+    {% endfor %}
+  </p-product-gallery2>
+  <div class="prod-info aquamarine">
+    <h1>{{product.title}}</h1>
+    {% content_for 'block', type: 'variant-picker', id: 'variant-picker', closest.product: current_product %}
+
+  </div>
+ </div> 
+</section>
+
+
+
+
+{%  # CSS  %}
+<style>
+.p-{{ section.id }}{
+    
+p-product-gallery[no-js] .image-container {
+    display: none;
+}
+.hidden{
+    display:none;
+}
+.palevioletred{
+    border: 1.5px solid palevioletred;
+}
+.aquamarine{
+    border: 1.5px solid aquamarine;
+}
+.grid{
+    display: grid;
+    min-height: 40vh;
+    grid-template-columns:repeat(2,1fr);
+    .image-gallery-grid{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap:1rem;
+    }
+    .prod-info{
+        padding:1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        fieldset{
+            justify-content: center;
+            legend{
+                margin-inline:auto;
+            }
+        }
+    }
+}
+
+}
+
+
+@media(min-width:768px){
+ .p-{{ section.id }}{
+  
+ }
+}
+
+
+</style>
+
+
+{%  # JAVASCRIPT  %}
+<script>
+  
+</script>
+
+
+{% schema %}
+ {
+ "name": "Pango Variant Test 2",
+ "settings": [],
+ "presets": [
+   {
+     "name": "Pango Variant Test 2",
+     "category": "All Pango"
+   }
+ ]
+} 
+{% endschema %}
+
