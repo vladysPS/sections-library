@@ -6,8 +6,14 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
+    "pango_variant_test_NVhMwW": {
+      "type": "pango-variant-test",
+      "name": "Pango Variant Test",
+      "settings": {}
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -70,6 +76,7 @@
               "type": "group",
               "name": "Header",
               "settings": {
+                "link": "",
                 "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -254,6 +261,7 @@
           ]
         }
       },
+      "disabled": true,
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
@@ -408,6 +416,7 @@
     }
   },
   "order": [
+    "pango_variant_test_NVhMwW",
     "main",
     "product_recommendations_qggXJq"
   ]
