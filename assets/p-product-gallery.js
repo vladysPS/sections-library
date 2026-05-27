@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-console.log("Product gallery initialized");
 
 class PProductGallery extends HTMLElement {
     constructor(){

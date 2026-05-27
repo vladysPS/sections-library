@@ -1,17 +1,43 @@
 <!-- pango-variant-test-2.liquid -->
 {%- assign current_product = product | default: closest.product -%}
 
+{% liquid
+  assign default_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  assign product_gallery_carousel_id = 'product-gallery-carousel-' | append: product.id | append: '-' | append: section.id
+  assign filtered_indexes = null | sort
+
+  if product.variants.size > 1
+    for media in product.media
+      if media.alt contains '#' and media.alt != product.title
+        assign alt_parts = media.alt | split: '#'
+        assign media_group_parts = alt_parts.last | split: '_'
+        assign option = product.options_by_name[media_group_parts.first]
+        assign option_value = option.selected_value | downcase
+        assign downcase_group_value = media_group_parts.last | strip | downcase
+
+        if option_value != downcase_group_value and media != default_media
+          assign media_position = media.position | sort
+          assign filtered_indexes = filtered_indexes | concat: media_position
+        endif
+      endif
+    endfor
+  endif
+%}
+
 <section class="p-{{ section.id }}">
  <div class="page-width grid" >
-  <p-product-gallery2 class="image-gallery-grid palevioletred" no-js>
+  <p-product-gallery2 class="image-gallery-grid palevioletred" data-product-handle="{{ product.handle }}" filtered-indexes="{{ filtered_indexes | json }}" >
     {% for media in current_product.images %}
+    {% assign media_pos = forloop.index %}
+    {% unless filtered_indexes contains media_pos %}
         <div class="image-container" data-alt="{{ media.alt }}">
-            {{ media | image_url: width: 800 | image_tag: alt: media.alt | escape }}
+        {{ media | image_url: width: 800 | image_tag: alt: media.alt | escape }}
         </div>
+    {% endunless %}
     {% endfor %}
   </p-product-gallery2>
   <div class="prod-info aquamarine">
-
+    <h4>VARIANT TEST 2</h4>
     <h1>{{product.title}}</h1>
     {% content_for 'block', type: 'variant-picker', id: 'variant-picker', closest.product: current_product %}
 
@@ -26,9 +52,6 @@
 <style>
 .p-{{ section.id }}{
     
-p-product-gallery2[no-js] .image-container {
-    display: none;
-}
 .hidden{
     display:none;
 }
