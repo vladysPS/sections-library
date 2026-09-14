@@ -326,6 +326,32 @@
       "type": "pango-recommended-products",
       "name": "Pango recommended products",
       "settings": {}
+    },
+    "pango_mapa_y8MVmT": {
+      "type": "pango-mapa",
+      "name": "Pango MAPA",
+      "settings": {
+        "height_map_mobile": 45,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20,
+        "mobile_map_position": "column-reverse",
+        "width_desktop": 100,
+        "height_map_desktop": 70,
+        "padding_top_desktop": 20,
+        "padding_bottom_desktop": 20,
+        "desktop_map_position": "row",
+        "map_styles": "osm",
+        "carto_key": "",
+        "show_search": "flex",
+        "show_filter": "flex",
+        "background_color": "#FFFFFF",
+        "border_radius": 0,
+        "border_radius_input": 0,
+        "image_form": "square",
+        "cards_color": "#FFFFFF",
+        "selected_location_color": "#22f8ffa3",
+        "border_radius_card": 0
+      }
     }
   },
   "order": [
@@ -336,6 +362,7 @@
     "typewriter_effect_ANgX4Y",
     "calendar_nicolina_jci9jA",
     "pango_whatsapp_epT7eL",
-    "pango_recommended_products_4XbpNr"
+    "pango_recommended_products_4XbpNr",
+    "pango_mapa_y8MVmT"
   ]
 }
