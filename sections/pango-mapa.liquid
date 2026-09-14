@@ -1,0 +1,583 @@
+<!-- pango-custom-MAP.liquid -->
+
+<section class="p-{{ section.id }} container">
+  <div class="p-container">
+    <div class="locations-list">
+
+      <input type="text" id="storeSearch-{{ section.id }}" placeholder="Search by name or location" />
+      <div class="p-radio-wrapper">
+        <div>
+          <input class="p-show-all" type="checkbox" id="all-{{ section.id }}" name="show-all" value="all" />
+          <label for="all-{{ section.id }}">All</label>
+        </div>
+        <div>
+          <input class="p-show-near" type="checkbox" id="near-{{ section.id }}" name="show-near" value="near" />
+          <label for="near-{{ section.id }}">Stores near me</label>
+        </div>
+        <div>
+          <input class="p-show-location" type="checkbox" id="location-{{ section.id }}" name="show-location" value="location" />
+          <label for="location-{{ section.id }}">Current location</label>
+        </div>
+      </div>
+
+      <ul id="storeList-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'store' -%}
+            <li data-name="{{ block.settings.store_name | downcase | escape }}" data-location="{{ block.settings.store_direction | downcase | escape }}" {{ block.shopify_attributes }}>
+              <div class="p-image-container">
+                {%- if block.settings.card_image -%}
+                  {{ block.settings.card_image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                  Place your image here
+                {%- endif -%}
+              </div>
+              <div class="p-text-container">
+                <h3>{{ block.settings.store_name }}</h3>
+                <p>{{ block.settings.store_direction }}</p>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+    <div id="map-{{ section.id }}"></div>
+  </div>
+</section>
+
+<style>
+.leaflet-popup-content {
+  font-size: 1.4rem !important;
+}
+.p-{{ section.id }}{
+  padding-top: {{ section.settings.padding_top_mobile }}px;
+  padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  background: {{ section.settings.background_color }};
+  .p-container{
+    display: flex;
+    gap: 20px;
+    flex-direction: {{ section.settings.mobile_map_position }};
+    .locations-list{
+      .p-radio-wrapper{
+        display: {{ section.settings.show_filter }};
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      input#storeSearch-{{ section.id }}{
+        display: {{ section.settings.show_search }};
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: {{ section.settings.border_radius_input }}px;
+      }
+      ul{
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        list-style: none;
+        margin: 0;
+        padding: 0 0 10px 0;
+        row-gap: 16px;
+        li{
+          background: {{ section.settings.cards_color }};
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          cursor: pointer;
+          margin: 0 16px 0 0;
+          border: 1px solid #ddd;
+          border-radius: {{ section.settings.border_radius_card }}px;
+          padding: 16px;
+          box-sizing: border-box;
+          flex: 0 0 87%;
+          scroll-snap-align: start;
+          .p-image-container{
+            width: 33%;
+            aspect-ratio: 1 / 0.85;
+            overflow: hidden;
+            {%- if section.settings.image_form == 'circle' -%}
+              border-radius: 50%;
+              aspect-ratio: 1 / 1;
+            {%- endif -%}
+            img{
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+              overflow-clip-margin: unset;
+            }
+          }
+          .p-text-container{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            h3{ margin: 0; }
+            p{ margin: 0; font-size: 14px; }
+            a{ font-size: 14px; }
+          }
+        }
+      }
+    }
+    #map-{{ section.id }}{
+      height: {{ section.settings.height_map_mobile }}vh;
+      border-radius: {{ section.settings.border_radius }}px;
+      overflow: hidden;
+    }
+  }
+  .locations-list li.selected{
+    background: {{ section.settings.selected_location_color }} !important;
+  }
+}
+@media (max-width: 375px){
+  .p-{{ section.id }} .p-container .locations-list ul li .p-image-container{
+    display: none;
+  }
+}
+@media (min-width: 500px) and (max-width: 1080px){
+  .p-{{ section.id }} .p-container .locations-list ul li{
+    flex: 0 0 54%;
+  }
+}
+@media (min-width: 1080px){
+  .p-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .p-container{
+      width: {{ section.settings.width_desktop }}%;
+      display: flex;
+      flex-direction: {{ section.settings.desktop_map_position }};
+      .locations-list{
+        margin-top: 0;
+        width: 35%;
+        ul{
+          flex-direction: column;
+          margin: 0;
+          max-height: 61vh;
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          {%- if section.settings.show_search == 'none' -%}
+            max-height: 66.5vh;
+          {%- endif -%}
+          {%- if section.settings.show_filter == 'none' -%}
+            max-height: 64.5vh;
+          {%- endif -%}
+          {%- if section.settings.show_search == 'none' and section.settings.show_filter == 'none' -%}
+            max-height: 70vh;
+          {%- endif -%}
+          li{
+            .p-text-container{
+              width: 67%;
+              gap: 8px;
+              h3{ font-size: calc(var(--font-heading-scale) * 1.7rem); }
+              p, a{ font-size: 1.5rem; }
+            }
+          }
+        }
+      }
+      #map-{{ section.id }}{
+        height: {{ section.settings.height_map_desktop }}vh;
+        width: 65%;
+      }
+    }
+  }
+}
+</style>
+
+<script>
+(function() {
+  if (typeof L === 'undefined') {
+    console.error('Pango Map: Leaflet no está cargado (revisa theme.liquid).');
+    return;
+  }
+
+  // UNIQUE VARIABLES
+  const sectionId = "{{ section.id }}";
+  const mapSection = document.querySelector(".p-" + sectionId);
+  const mapElId = "map-" + sectionId;
+  const searchElId = "storeSearch-" + sectionId;
+  const listElId = "storeList-" + sectionId;
+  const seeAllButton = mapSection.querySelector(".p-show-all");
+  const seeNearButton = mapSection.querySelector(".p-show-near");
+  const seeLocationButton = mapSection.querySelector(".p-show-location");
+  const listItems = mapSection.querySelectorAll("#" + listElId + " li");
+  const markers = [];
+  let userMarker = null;
+
+  // INITIALIZE MAP
+  const map = L.map(mapElId).setView([40.4168, -3.7038], 6);
+
+  // TILES
+  const style = "{{ section.settings.map_styles }}";
+  const key = "{{ section.settings.carto_key }}";
+  const isCarto = style !== "osm";
+
+  const tileUrl = isCarto
+    ? `https://{s}.basemaps.cartocdn.com/rastertiles/${style}_all/{z}/{x}/{y}.png${key ? '?key=' + key : ''}`
+    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+  const tileOptions = {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' + (isCarto ? ', &copy; <a href="https://carto.com/attributions">CARTO</a>' : '')
+  };
+  if (isCarto) tileOptions.subdomains = 'abcd';
+
+  L.tileLayer(tileUrl, tileOptions).addTo(map);
+
+  function fitMapToMarkers() {
+    const visibleMarkers = markers.filter((m, i) => listItems[i].style.display !== 'none');
+    if (visibleMarkers.length > 0) {
+      const group = L.featureGroup(visibleMarkers);
+      map.fitBounds(group.getBounds().pad(0.2));
+    }
+  }
+
+  function selectListItem(li) {
+    if (li.classList.contains('selected')) {
+      li.classList.remove('selected');
+    } else {
+      listItems.forEach(item => item.classList.remove('selected'));
+      li.classList.add('selected');
+    }
+  }
+
+  function showAllMarkers() {
+    markers.forEach(marker => marker.addTo(map));
+    listItems.forEach(li => li.style.display = '');
+    fitMapToMarkers();
+  }
+
+  function removeUserMarker() {
+    if (userMarker) {
+      map.removeLayer(userMarker);
+      userMarker = null;
+    }
+  }
+
+  function addUserMarker(lat, lng) {
+    removeUserMarker();
+    userMarker = L.circleMarker([lat, lng], {
+      radius: 8,
+      color: '#3388ff',
+      fillColor: '#3388ff',
+      fillOpacity: 0.8
+    }).addTo(map)
+      .bindPopup("This is your current location")
+      .openPopup();
+  }
+
+  // RENDERING MARKERS USING BLOCKS
+  const stores = [
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'store' -%}
+        {
+          name: {{ block.settings.store_name | escape | json }},
+          dir: {{ block.settings.store_direction | escape | json }},
+          link: {{ block.settings.gmaps_link | json }},
+          icon: {% if block.settings.icono_marker %}{{ block.settings.icono_marker | image_url: width: 88 | json }}{% else %}null{% endif %},
+          lat: parseFloat({{ block.settings.latitude | strip | replace: ',', '.' | json }}),
+          lng: parseFloat({{ block.settings.longitude | strip | replace: ',', '.' | json }})
+        },
+      {%- endif -%}
+    {%- endfor -%}
+  ];
+
+  stores.forEach((s, i) => {
+    if (isNaN(s.lat) || isNaN(s.lng)) {
+      console.warn('Pango Map: coordenadas inválidas en', s.name);
+      markers.push(null);
+      return;
+    }
+    const opts = s.icon
+      ? { icon: L.icon({ iconUrl: s.icon, iconSize: [44, 45], iconAnchor: [22, 45], popupAnchor: [-3, -46] }) }
+      : {};
+    const marker = L.marker([s.lat, s.lng], opts).addTo(map).bindPopup(
+      `<b>${s.name}</b><br>` +
+      (s.link ? `<a href="${s.link}" target="_blank" rel="noopener noreferrer">Open with Google maps</a><br>` : '') +
+      s.dir
+    );
+    marker.on('click', () => selectListItem(listItems[i]));
+    markers.push(marker);
+  });
+
+
+  // DISTANCE BETWEEN USER AND EACH STORE (HAVERSINE)
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  // LIST ITEM CLICK
+  listItems.forEach((li, i) => {
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName.toLowerCase() === 'a') return;
+
+      seeAllButton.checked = false;
+      seeNearButton.checked = false;
+
+      const marker = markers[i];
+      if (marker) {
+        map.flyTo(marker.getLatLng(), 16);
+        marker.openPopup();
+      }
+      selectListItem(li);
+    });
+  });
+
+  // SEARCH
+  const searchInput = document.getElementById(searchElId);
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+
+    removeUserMarker();
+    seeAllButton.checked = false;
+    seeNearButton.checked = false;
+    seeLocationButton.checked = false;
+
+    listItems.forEach((li, index) => {
+      const name = li.dataset.name;
+      const location = li.dataset.location;
+
+      if (name.includes(query) || location.includes(query)) {
+        li.style.display = '';
+        markers[index].addTo(map);
+      } else {
+        li.style.display = 'none';
+        map.removeLayer(markers[index]);
+      }
+    });
+    fitMapToMarkers();
+  });
+
+  // CURRENT LOCATION
+  seeLocationButton.addEventListener('change', (e) => {
+    if (!e.target.checked) {
+      removeUserMarker();
+      showAllMarkers();
+      return;
+    }
+
+    map.closePopup();
+    seeAllButton.checked = false;
+    seeNearButton.checked = false;
+
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      seeLocationButton.checked = false;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        addUserMarker(userLat, userLng);
+        map.setView([userLat, userLng], 11);
+      },
+      (error) => {
+        console.error('Could not get location', error);
+        alert('Could not access your location, allow location in settings.');
+        seeLocationButton.checked = false;
+      }
+    );
+  });
+
+  // ALL
+  seeAllButton.addEventListener('change', (e) => {
+    if (!e.target.checked) return;
+
+    map.closePopup();
+    seeNearButton.checked = false;
+    seeLocationButton.checked = false;
+    removeUserMarker();
+    listItems.forEach(li => li.classList.remove('selected'));
+    showAllMarkers();
+  });
+
+  // NEAR ME
+  seeNearButton.addEventListener('change', (e) => {
+    if (!e.target.checked) {
+      removeUserMarker();
+      showAllMarkers();
+      return;
+    }
+
+    seeAllButton.checked = false;
+    seeLocationButton.checked = false;
+    listItems.forEach(li => li.classList.remove('selected'));
+
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      seeNearButton.checked = false;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        addUserMarker(userLat, userLng);
+
+        // Radius levels (km): expand until at least one store is found
+        const radii = [10, 20, 50, 200, 500, 1000, 2000, 5000];
+        let storesToShow = [];
+
+        for (let r = 0; r < radii.length; r++) {
+          storesToShow = [];
+          markers.forEach((marker, i) => {
+            const { lat, lng } = marker.getLatLng();
+            if (getDistanceFromLatLonInKm(userLat, userLng, lat, lng) <= radii[r]) storesToShow.push(i);
+          });
+          if (storesToShow.length > 0) break;
+        }
+
+        markers.forEach((marker, i) => {
+          if (storesToShow.includes(i)) {
+            marker.addTo(map);
+            listItems[i].style.display = '';
+          } else {
+            map.removeLayer(marker);
+            listItems[i].style.display = 'none';
+          }
+        });
+
+        const visibleMarkers = storesToShow.map(i => markers[i]);
+        visibleMarkers.push(userMarker);
+        map.fitBounds(L.featureGroup(visibleMarkers).getBounds().pad(0.2));
+      },
+      (error) => {
+        console.error('Could not get location', error);
+        alert('Could not access your location.');
+        seeNearButton.checked = false;
+      }
+    );
+  });
+
+  fitMapToMarkers();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pango MAPA",
+  "settings": [
+    { "type": "header", "content": "MOBILE" },
+    { "type": "range", "id": "height_map_mobile", "label": "Height Map Mobile", "min": 30, "max": 100, "step": 1, "default": 45 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Padding top mobile", "min": 0, "max": 150, "step": 5, "default": 20 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding bottom mobile", "min": 0, "max": 150, "step": 5, "default": 20 },
+    {
+      "type": "select",
+      "id": "mobile_map_position",
+      "label": "Mobile map position",
+      "options": [
+        { "value": "column-reverse", "label": "Up" },
+        { "value": "column", "label": "Down" }
+      ],
+      "default": "column-reverse"
+    },
+
+    { "type": "header", "content": "DESKTOP" },
+    { "type": "range", "id": "width_desktop", "label": "Width desktop", "min": 30, "max": 100, "step": 2, "default": 100 },
+    { "type": "range", "id": "height_map_desktop", "label": "Height Map Desktop", "min": 30, "max": 100, "step": 1, "default": 70 },
+    { "type": "range", "id": "padding_top_desktop", "label": "Padding top desktop", "min": 0, "max": 150, "step": 5, "default": 20 },
+    { "type": "range", "id": "padding_bottom_desktop", "label": "Padding bottom desktop", "min": 0, "max": 150, "step": 5, "default": 20 },
+    {
+      "type": "select",
+      "id": "desktop_map_position",
+      "label": "Desktop map position",
+      "options": [
+        { "value": "row-reverse", "label": "Left" },
+        { "value": "row", "label": "Right" }
+      ],
+      "default": "row"
+    },
+
+    { "type": "header", "content": "MAP" },
+    {
+      "type": "select",
+      "id": "map_styles",
+      "label": "Map styles",
+      "options": [
+        { "value": "osm", "label": "Default (OpenStreetMap)" },
+        { "value": "light", "label": "Light (Carto)" },
+        { "value": "dark", "label": "Dark (Carto)" }
+      ],
+      "default": "osm"
+    },
+    {
+      "type": "text",
+      "id": "carto_key",
+      "label": "Carto API key",
+      "info": "Solo necesaria para Light/Dark. Gratis en carto.com/basemaps/apikey"
+    },
+    {
+      "type": "radio",
+      "id": "show_search",
+      "label": "Show search",
+      "options": [
+        { "value": "flex", "label": "yes" },
+        { "value": "none", "label": "no" }
+      ],
+      "default": "flex"
+    },
+    {
+      "type": "radio",
+      "id": "show_filter",
+      "label": "Show filters",
+      "options": [
+        { "value": "flex", "label": "yes" },
+        { "value": "none", "label": "no" }
+      ],
+      "default": "flex"
+    },
+    { "type": "color", "id": "background_color", "label": "Background Color", "default": "#FFFFFF" },
+    { "type": "range", "id": "border_radius", "label": "Map Border Radius", "min": 0, "max": 60, "step": 1, "default": 0 },
+    { "type": "range", "id": "border_radius_input", "label": "Input Border Radius", "min": 0, "max": 60, "step": 1, "default": 0 },
+
+    { "type": "header", "content": "Cards Settings" },
+    {
+      "type": "radio",
+      "id": "image_form",
+      "label": "Image form",
+      "options": [
+        { "value": "square", "label": "square" },
+        { "value": "circle", "label": "circle" }
+      ],
+      "default": "square"
+    },
+    { "type": "color", "id": "cards_color", "label": "Cards Color", "default": "#FFFFFF" },
+    { "type": "color", "id": "selected_location_color", "label": "Selected Location Color", "default": "#22f8ffa3" },
+    { "type": "range", "id": "border_radius_card", "label": "Card Border Radius", "min": 0, "max": 60, "step": 1, "default": 0 }
+  ],
+  "blocks": [
+    {
+      "name": "Store",
+      "type": "store",
+      "settings": [
+        { "type": "text", "id": "store_name", "label": "Store name", "default": "Store name" },
+        { "type": "url", "id": "gmaps_link", "label": "Store Link" },
+        { "type": "text", "id": "store_direction", "label": "Store direction" },
+        { "type": "image_picker", "id": "icono_marker", "label": "Icon marker" },
+        { "type": "image_picker", "id": "card_image", "label": "Card image" },
+        { "type": "text", "id": "latitude", "label": "Latitude" },
+        { "type": "text", "id": "longitude", "label": "Longitude" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Pango MAPA", "category": "All Pango" }
+  ]
+}
+{% endschema %}
