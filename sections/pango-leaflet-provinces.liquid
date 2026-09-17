@@ -4,6 +4,10 @@ for the details of bulding this section go to :
 1) https://leafletjs.com/examples/quick-start/
 2) https://leafletjs.com/examples/geojson/
 3) https://leafletjs.com/examples/choropleth/
+
+In order to load the provinces data acces the leaflet-EU_data.js file in the assets folder. 
+This file contains the GeoJSON data for the provinces of Europe. 
+The data is loaded into the map using the L.geoJson() method, which takes the GeoJSON data and adds it to the map as a layer.
 -->
 
 <section class="p-{{ section.id }}">
@@ -96,7 +100,7 @@ function highlightFeature(e) {
 function resetHighlight(e) {
     geojson.resetStyle(e.target);
 }
-
+// ADD IN THIS FUNCTION THE FUNCTINALITY YOU WANT TO DO WHEN A PROVINCE IS CLICKED
 function zoomToFeature(e) {
     map.flyToBounds(e.target.getBounds(), {
         padding: [80, 80],  // breathing room around the province
