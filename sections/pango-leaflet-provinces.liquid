@@ -6,7 +6,8 @@ for the details of bulding this section go to :
 3) https://leafletjs.com/examples/choropleth/
 
 In order to load the provinces data acces the leaflet-EU_data.js file in the assets folder. 
-This file contains the GeoJSON data for the provinces of Europe. 
+This file contains the GeoJSON data for the regions of the SELECTED countries; the countries
+you only want to show as a backdrop live in leaflet-EU_data_not_selected.js, one outline each. 
 The data is loaded into the map using the L.geoJson() method, which takes the GeoJSON data and adds it to the map as a layer.
 -->
 
@@ -41,8 +42,10 @@ The data is loaded into the map using the L.geoJson() method, which takes the Ge
 
 </style>
 
-{%  # GeoJSON data: defines window.provincesData  %}
+{% comment %}  GeoJSON data: defines window.provincesData (selected countries, split
+      into regions) and window.notSelectedData (whole-country outlines) {% endcomment %}  
 <script src="{{ 'leaflet-EU_data.js' | asset_url }}"></script>
+<script src="{{ 'leaflet-EU_data_not_selected.js' | asset_url }}"></script>
 
 <script>
 
@@ -71,9 +74,12 @@ The data is loaded into the map using the L.geoJson() method, which takes the Ge
     map.fitBounds(westernEurope);
   });
 
-// provincesData comes from assets/leaflet-EU_data.js (loaded just above)
+// provincesData comes from assets/leaflet-EU_data.js and notSelectedData from
+// assets/leaflet-EU_data_not_selected.js (both loaded just above).
+// Each file gets its own L.geoJson layer, so each one gets its own style.
 
-function style(feature) {
+// SELECTED countries: the regions you can hover and click.
+function addColorsToMap(feature) {
     return {
         fillColor: '#7AA2C4',
         weight: 2,
@@ -84,8 +90,36 @@ function style(feature) {
     };
 }
 
+// NOT-SELECTED countries: a muted backdrop, no interaction.
+function addColorsToNotSelectedMap(feature) {
+    return {
+        fillColor: '#D96C6C',
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.25
+    };
+}
+
+// Only one province is highlighted at a time, and we keep a reference to it.
+// Fast hovering can swallow a mouseout (bringToFront() re-orders the SVG paths
+// under the cursor), which used to leave the thick border painted for good.
+// Clearing the previous one on every mouseover makes a missed event harmless.
+let highlighted = null;
+
+function clearHighlight() {
+    if (!highlighted) return;
+    geojson.resetStyle(highlighted);
+    highlighted = null;
+}
+
 function highlightFeature(e) {
     var layer = e.target;
+    if (layer === highlighted) return;
+
+    clearHighlight();
+    highlighted = layer;
 
     layer.setStyle({
         weight: 5,
@@ -98,7 +132,7 @@ function highlightFeature(e) {
 }
 
 function resetHighlight(e) {
-    geojson.resetStyle(e.target);
+    if (e.target === highlighted) clearHighlight();
 }
 // ADD IN THIS FUNCTION THE FUNCTINALITY YOU WANT TO DO WHEN A PROVINCE IS CLICKED
 function zoomToFeature(e) {
@@ -124,10 +158,23 @@ function onEachFeature(feature, layer) {
     });
 }
 
+// Added first so it stays under the selected regions. interactive:false keeps
+// it out of every mouse event, so it can never reach highlightFeature/
+// clearHighlight (which reset styles against the `geojson` layer only).
+notSelectedGeojson = L.geoJson(notSelectedData, {
+    style: addColorsToNotSelectedMap,
+    interactive: false
+}).addTo(map);
+
 geojson = L.geoJson(provincesData, {
-    style: style,
+    style: addColorsToMap,
     onEachFeature: onEachFeature
 }).addTo(map);
+
+// Safety net: leaving the map altogether (fast flick out of the container, or
+// out of the browser window) can also skip the province's mouseout.
+// mouseleave doesn't bubble, so this only fires for the map itself.
+map.getContainer().addEventListener('mouseleave', clearHighlight);
 
 
 </script>
