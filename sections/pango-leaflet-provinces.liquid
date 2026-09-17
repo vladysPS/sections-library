@@ -107,8 +107,11 @@ function zoomToFeature(e) {
         maxZoom: 7,         // don't zoom past this, however small the province
         duration: 0.6
     });
-    // ADD HERE THE FUNCTINALITY YOU WANT TO DO WHEN A PROVINCE IS CLICKED
-    console.log(e.target.feature.properties.name);
+    hazEstoCuandoProvinciaClicada(e)
+  }
+  // ADD HERE THE FUNCTINALITY YOU WANT TO DO WHEN A PROVINCE IS CLICKED
+function hazEstoCuandoProvinciaClicada(e){
+  console.log(e.target.feature.properties.name);
 }
 
 /* LOADS THE MAIN FUNCTIONALITY OF THE MAP */
