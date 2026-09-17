@@ -1,0 +1,141 @@
+<!-- pango-leaflet-provinces.liquid -->
+<!-- this is an interactive map done with LEAFLET
+for the details of bulding this section go to :
+1) https://leafletjs.com/examples/quick-start/
+2) https://leafletjs.com/examples/geojson/
+3) https://leafletjs.com/examples/choropleth/
+-->
+
+<section class="p-{{ section.id }}">
+ <div class="map-wrapper">
+   <div id="map"></div>
+ </div> 
+</section>
+
+
+<style>
+.p-{{ section.id }}{
+    .map-wrapper{
+        padding:3rem;
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        
+    }
+    #map { 
+        height: 480px; 
+        max-width: 950px;
+        width: 100%;
+    }
+}
+
+@media(min-width:768px){
+ .p-{{ section.id }}{
+  
+ }
+}
+
+</style>
+
+{%  # GeoJSON data: defines window.provincesData  %}
+<script src="{{ 'leaflet-EU_data.js' | asset_url }}"></script>
+
+<script>
+
+  let westernEurope = L.latLngBounds(
+    [35.8, -11.0],  // south-west corner (south of Spain, west of Portugal)
+    [56.2,  13.5]   // north-east corner (north of the UK, east of Germany)
+  );
+
+  let map = L.map('map', {
+    maxBounds: westernEurope.pad(0.25), // don't let the user drag off to Asia
+    maxBoundsViscosity: 0.8,
+    minZoom: 4,
+    maxZoom: 12
+  });
+
+  map.fitBounds(westernEurope);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+  
+  window.addEventListener('resize', function () {
+    map.invalidateSize();
+    map.fitBounds(westernEurope);
+  });
+
+// provincesData comes from assets/leaflet-EU_data.js (loaded just above)
+
+function style(feature) {
+    return {
+        fillColor: '#7AA2C4',
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+}
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
+
+function zoomToFeature(e) {
+    map.flyToBounds(e.target.getBounds(), {
+        padding: [80, 80],  // breathing room around the province
+        maxZoom: 7,         // don't zoom past this, however small the province
+        duration: 0.6
+    });
+    // ADD HERE THE FUNCTINALITY YOU WANT TO DO WHEN A PROVINCE IS CLICKED
+    console.log(e.target.feature.properties.name);
+}
+
+/* LOADS THE MAIN FUNCTIONALITY OF THE MAP */
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+geojson = L.geoJson(provincesData, {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+
+</script>
+
+
+{% schema %}
+ {
+ "name": "Pango leaflet provinces",
+ "settings": [],
+ "presets": [
+   {
+     "name": "Pango leaflet provinces",
+     "category": "All Pango"
+   }
+ ]
+} 
+{% endschema %}
+
