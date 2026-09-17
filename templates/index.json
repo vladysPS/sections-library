@@ -47,6 +47,7 @@
         "slide_video_CrbdxX",
         "slide_image_QFLGab"
       ],
+      "disabled": true,
       "name": "Pango Slideshow",
       "settings": {
         "color_text": "#ffffff",
@@ -301,6 +302,7 @@
     },
     "typewriter_effect_ANgX4Y": {
       "type": "typewriter-effect",
+      "disabled": true,
       "name": "Typewriter Effect",
       "settings": {
         "paragraph": "<p>We transform sensations into passions, encapsulating the purest and deepest essence of our roots in perfumes.</p>",
@@ -312,11 +314,13 @@
     },
     "calendar_nicolina_jci9jA": {
       "type": "calendar-nicolina",
+      "disabled": true,
       "name": "Calendar Nicolina",
       "settings": {}
     },
     "pango_whatsapp_epT7eL": {
       "type": "pango-whatsapp",
+      "disabled": true,
       "name": "Pango WhatsApp Button",
       "settings": {
         "numero_de_telfono": "611233444"
@@ -324,34 +328,14 @@
     },
     "pango_recommended_products_4XbpNr": {
       "type": "pango-recommended-products",
+      "disabled": true,
       "name": "Pango recommended products",
       "settings": {}
     },
-    "pango_mapa_y8MVmT": {
-      "type": "pango-mapa",
-      "name": "Pango MAPA",
-      "settings": {
-        "height_map_mobile": 45,
-        "padding_top_mobile": 20,
-        "padding_bottom_mobile": 20,
-        "mobile_map_position": "column-reverse",
-        "width_desktop": 100,
-        "height_map_desktop": 70,
-        "padding_top_desktop": 20,
-        "padding_bottom_desktop": 20,
-        "desktop_map_position": "row",
-        "map_styles": "osm",
-        "carto_key": "",
-        "show_search": "flex",
-        "show_filter": "flex",
-        "background_color": "#FFFFFF",
-        "border_radius": 0,
-        "border_radius_input": 0,
-        "image_form": "square",
-        "cards_color": "#FFFFFF",
-        "selected_location_color": "#22f8ffa3",
-        "border_radius_card": 0
-      }
+    "pango_leaflet_provinces_nQawaG": {
+      "type": "pango-leaflet-provinces",
+      "name": "Pango leaflet provinces",
+      "settings": {}
     }
   },
   "order": [
@@ -363,6 +347,6 @@
     "calendar_nicolina_jci9jA",
     "pango_whatsapp_epT7eL",
     "pango_recommended_products_4XbpNr",
-    "pango_mapa_y8MVmT"
+    "pango_leaflet_provinces_nQawaG"
   ]
 }
