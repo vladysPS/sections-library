@@ -1,0 +1,202 @@
+<!-- pango-cuenta-atras.liquid -->
+
+<section class="p-{{ section.id }}">
+ <div class="p-countdown-wrapper">
+    
+    <div class="p-countdown-text">{{ section.settings.countdown_text }}</div> 
+
+    <div class="p-time-wrapper">
+        <span class="number-text-wrap">
+            <span class="p-days p-time"></span>
+            <span class="p-time-text">{{  'pango.countodown_days' | t }}</span> 
+        </span>
+        <span>/</span>
+        <span class="number-text-wrap">
+            <span class="p-hours p-time"></span>
+            <span class="p-time-text">{{  'pango.countodown_hours' | t }}</span> 
+        </span>
+        <span>/</span>
+        <span class="number-text-wrap">
+            <span class="p-minutes p-time"></span>
+            <span class="p-time-text">{{  'pango.countodown_minutes' | t }}</span> 
+        </span>
+        <span>/</span>
+        <span class="number-text-wrap">
+            <span class="p-seconds p-time"></span>
+            <span class="p-time-text">{{  'pango.countodown_seconds' | t }}</span>
+        </span>
+    </div>
+ </div> 
+</section>
+
+<style>
+.p-{{ section.id }}{
+    padding-top:15px;
+    padding-bottom:15px;
+    padding-inline: 16px;
+    text-align:center;
+
+    .p-countdown-wrapper{
+        display:flex;
+        flex-wrap:wrap;
+        flex-direction: column;
+        gap: 7px;
+        justify-content:center;
+        align-items:center;
+        .p-countdown-text{
+            font-size:18px;
+            p{
+                margin:0;
+            }
+        }
+        .p-time-wrapper{
+            display: flex;
+            gap: 1px;
+            line-height: 1.1;
+            font-size:20px;
+            {%- if section.settings.cuenta_atras_en_negrita -%}
+                font-weight:600;
+            {% else %}
+                font-weight:400;
+            {%- endif -%}
+            .number-text-wrap {
+                display:flex;
+                flex-direction:column;
+                .p-time-text{
+                    font-size: 8px;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                     line-height: 1.2;
+                }
+            }
+        }
+
+    }
+
+}
+
+
+@media(min-width:768px){
+ .p-{{ section.id }}{
+     .p-countdown-wrapper{
+        flex-direction: row;
+        gap: 20px;
+    }
+ }
+}
+</style>
+
+
+<script>
+    function $(selector) {
+        const sectionWrapper = document.querySelector(".p-{{ section.id }}");
+        return  sectionWrapper.querySelector(selector);
+    }
+
+    const monthNumberFormated = {{section.settings.month}} - 1 ;
+
+    const endDateFull = new Date(
+        {{section.settings.year}},
+        monthNumberFormated, 
+        {{section.settings.day}}, 
+        {{section.settings.hour}}
+    );
+    console.log("this is the date", endDateFull)
+
+    function updateCountDown () {
+        const timeContainer = $('.p-time-wrapper');
+        const daysElement = $('.p-days');
+        const hoursElement = $('.p-hours');
+        const minutesElement = $('.p-minutes');
+        const secondsElement = $('.p-seconds');
+
+        let currentDate = new Date();
+        let diffMs = endDateFull - currentDate;
+
+        let daysLeft = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        let hoursLeft = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+        let minutesLeft = Math.floor((diffMs / (1000 * 60)) % 60);
+        let secondsLeft = Math.floor((diffMs / 1000) % 60);
+
+       if (diffMs <= 0){
+            clearInterval(intervalId);
+            timeContainer.innerHTML = "{{ section.settings.end_countdown_text }}";
+            return;
+        }
+        
+        daysElement.innerHTML = `${daysLeft}`;
+        hoursElement.innerHTML = `${hoursLeft}`;
+        minutesElement.innerHTML = `${minutesLeft}`;
+        secondsElement.innerHTML = `${secondsLeft}`;
+    }
+    updateCountDown();
+
+    const intervalId = setInterval(updateCountDown, 1000);
+
+</script>
+
+
+{% schema %}
+ {
+ "name": "Pango cuenta atrás",
+ "settings": [
+    {
+        "type":"header",
+        "content":"Configuración texto"
+    },
+    {
+        "type" : "richtext",
+        "id" : "countdown_text",
+        "label" : "Texto cuenta atrás",
+        "default" : "<p>35% DESCUENTO TERMINA EN</p>"
+    },
+    {
+        "type" : "text",
+        "id" : "end_countdown_text",
+        "label" : "Texto final",
+        "default" : "LA OFERTA TERMINÓ"
+    },
+    {
+      "type": "checkbox",
+      "id": "cuenta_atras_en_negrita",
+      "label": "Cuenta atras en negrita",
+      "default": true
+    },
+    {
+        "type":"header",
+        "content":"Configuración fecha"
+    },
+    {
+      "type": "number",
+      "id": "year",
+      "label": "Año",
+      "default": 2026
+    },
+    {
+      "type": "number",
+      "id": "month",
+      "label": "Mes (Entre 1 y 12)",
+      "default": 10
+    },
+    {
+      "type": "number",
+      "id": "day",
+      "label": "Día del mes",
+      "default": 10
+    },
+    {
+      "type": "number",
+      "id": "hour",
+      "label": "Hora (Entre 0 y 23)",
+      "default": 23
+    }
+ ],
+ "presets": [
+   {
+     "name": "Pango cuenta atrás",
+     "category": "All Pango"
+   }
+ ]
+} 
+{% endschema %}
+
