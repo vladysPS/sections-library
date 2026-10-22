@@ -1,0 +1,77 @@
+<!-- pango-kit-digital.liquid -->
+
+
+<section class="p-{{ section.id }}">
+ <div class="page-width">
+  <div class="p-inner">
+    <img src="https://cdn.shopify.com/s/files/1/0942/1737/2022/files/kig-digital-1-white.png?v=1772524956" height="40" width="140">
+    <img src="https://cdn.shopify.com/s/files/1/0942/1737/2022/files/kit-digital-2-blanco.png?v=1772456928" height="40" width="140">
+  </div>  
+ </div> 
+</section>
+
+
+
+
+{%  # CSS  %}
+<style>
+.p-{{ section.id }}{
+    border-top: 1px solid {{section.settings.top_border}};
+    background: {{section.settings.background}};
+    padding:20px 0;
+    .p-inner{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      img{
+        object-fit: contain;
+      }
+    }
+}
+
+
+
+@media (min-width:750px){
+ .p-{{ section.id }}{
+    .p-inner{
+      justify-content:start;
+    }
+ }
+}
+
+
+</style>
+
+
+{%  # JAVASCRIPT  %}
+<script>
+  
+</script>
+
+
+{% schema %}
+ {
+ "name": "Pango kit digital",
+ "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color",
+      "id": "top_border",
+      "label": "Top border"
+    }
+ ],
+ "presets": [
+   {
+     "name": "Pango kit digital",
+     "category": "All Pango"
+   }
+ ]
+} 
+{% endschema %}
+
